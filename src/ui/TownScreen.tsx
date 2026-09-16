@@ -1,11 +1,14 @@
-import type { PermanentState } from '../game/model';
+import type { ArtDefinition, PermanentState } from '../game/model';
 
 interface Props {
   permanent: PermanentState;
+  arts: ArtDefinition[];
   onPrep: () => void;
+  onLearn: (artId: string) => void;
 }
 
-export function TownScreen({ permanent, onPrep }: Props) {
+export function TownScreen({ permanent, arts, onPrep, onLearn }: Props) {
+  const learnable = arts.filter((art) => art.manualItemId && !permanent.learnedArts.includes(art.id));
   return (
     <main className="page town-page">
       <div className="town-illustration" aria-hidden="true"><span>青石镇</span></div>
@@ -23,6 +26,11 @@ export function TownScreen({ permanent, onPrep }: Props) {
           <div className="town-row"><span>茶馆</span><small>江湖传闻在杯盏间流转</small></div>
           <div className="town-row"><span>药铺</span><small>备药，疗伤，为下一程留余地</small></div>
           <div className="town-row"><span>练功处</span><small>带回秘籍后，方可参悟</small></div>
+        </section>
+        <section className="town-list" aria-label="参悟武学">
+          <h2>参悟武学</h2>
+          <p className="hint">已掌握：{arts.filter((art) => permanent.learnedArts.includes(art.id)).map((art) => art.name).join('、')}</p>
+          {learnable.map((art) => <button className="town-art" key={art.id} type="button" disabled={!permanent.stash[art.manualItemId!]} onClick={() => onLearn(art.id)}>参悟{art.name}<small>{permanent.stash[art.manualItemId!] ? '消耗秘笈 ×1' : '尚未带回秘籍'}</small></button>)}
         </section>
       </div>
       <div className="bottom-action"><button className="primary-button" type="button" onClick={onPrep}>出发整备</button></div>

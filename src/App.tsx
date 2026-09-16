@@ -12,6 +12,7 @@ import { PrepScreen } from './ui/PrepScreen';
 import { ResultScreen } from './ui/ResultScreen';
 import { TownScreen } from './ui/TownScreen';
 import { CombatScreen } from './ui/CombatScreen';
+import { learnArt } from './game/engine/martial';
 
 export default function App() {
   const content = useMemo(loadBundledContent, []);
@@ -43,7 +44,7 @@ export default function App() {
   const notice = storageError ?? (initial.recovered ? '已恢复上一稳定存档。' : null);
 
   if (game.phase === 'prep') {
-    return <><PrepScreen permanent={game.permanent} onBack={() => commit({ ...game, phase: 'town' })} onStart={(coins) => commit(startRun(game, {}, coins, Date.now(), content))} />{notice && <div className="floating-notice" role="status">{notice}</div>}</>;
+    return <><PrepScreen permanent={game.permanent} items={content.items} onBack={() => commit({ ...game, phase: 'town' })} onStart={(coins, loadout) => commit(startRun(game, loadout, coins, Date.now(), content))} />{notice && <div className="floating-notice" role="status">{notice}</div>}</>;
   }
 
   if (game.phase === 'explore' && game.run) {
@@ -70,5 +71,5 @@ export default function App() {
 
   if (game.phase === 'result' && game.lastResult) return <ResultScreen result={game.lastResult} onReturn={() => commit(returnToTown(game))} />;
 
-  return <><TownScreen permanent={game.permanent} onPrep={() => commit({ ...game, phase: 'prep' })} />{notice && <div className="floating-notice" role="status">{notice}</div>}</>;
+  return <><TownScreen permanent={game.permanent} arts={content.arts} onLearn={(artId) => commit(learnArt(game, artId))} onPrep={() => commit({ ...game, phase: 'prep' })} />{notice && <div className="floating-notice" role="status">{notice}</div>}</>;
 }

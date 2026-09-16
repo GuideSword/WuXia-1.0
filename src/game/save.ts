@@ -59,7 +59,9 @@ const PENDING = 'wuxia.pending';
 function parseEnvelope(text: string): GameState {
   try {
     const parsed: unknown = JSON.parse(text);
-    return ENVELOPE.parse(parsed).game;
+    const game = ENVELOPE.parse(parsed).game;
+    if (!game.permanent.learnedArts.includes('basic_sword')) game.permanent.learnedArts.unshift('basic_sword');
+    return game;
   } catch (error) {
     throw new Error(`存档校验失败：${error instanceof Error ? error.message : '未知错误'}`);
   }

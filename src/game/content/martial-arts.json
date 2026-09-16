@@ -1,1 +1,8 @@
-[]
+[
+  { "id": "basic_sword", "name": "基础剑法", "tags": ["sword", "first"], "technique": "平刺", "mapActions": ["fight"] },
+  { "id": "wild_blade", "name": "狂风刀", "tags": ["blade", "hard", "first"], "manualItemId": "wild_manual", "technique": "断风斩", "mapActions": ["break_guard"] },
+  { "id": "taiji_sword", "name": "太极剑", "tags": ["sword", "soft", "counter"], "manualItemId": "taiji_manual", "technique": "引鹤归", "mapActions": ["parry"] },
+  { "id": "swallow_step", "name": "燕回身", "tags": ["lightness", "movement", "evasive"], "manualItemId": "swallow_manual", "technique": "掠影", "mapActions": ["cliff", "roof"] },
+  { "id": "turtle_breath", "name": "龟息功", "tags": ["breath", "stealth"], "manualItemId": "breath_manual", "technique": "潜息", "mapActions": ["waterway"] },
+  { "id": "acupoint", "name": "点穴手", "tags": ["control", "stealth"], "manualItemId": "acupoint_manual", "technique": "封脉", "mapActions": ["silent_subdue"] }
+]

@@ -2,6 +2,7 @@ import type { GameState } from '../model';
 import { rollD6 } from '../seed';
 import { addHeat } from './heat';
 import { failRun } from './lifecycle';
+import { artTags } from './martial';
 
 export type CombatAction = { type: 'attack' | 'technique' | 'defend' | 'movement' | 'item' | 'retreat'; artId?: string };
 
@@ -14,7 +15,8 @@ export function resolveTurn(state: GameState, action: CombatAction): GameState {
   if (action.type === 'technique' && !state.permanent.learnedArts.includes(action.artId ?? '')) throw new Error('尚未掌握这门武学');
   const enemyGuard = battle.intent === 'guard';
   const baseDamage = action.type === 'attack' ? 8 : action.type === 'technique' ? 12 : 0;
-  const damage = enemyGuard ? Math.floor(baseDamage / 2) : baseDamage;
+  const techniqueBonus = action.type === 'technique' && action.artId === 'taiji_sword' && battle.intent === 'heavy' ? 4 : 0;
+  const damage = enemyGuard ? Math.floor((baseDamage + techniqueBonus) / 2) : baseDamage + techniqueBonus;
   const enemyHp = Math.max(0, battle.enemyHp - damage);
   const inventory = { ...run.inventory };
   if (action.type === 'item') inventory.medicine -= 1;
@@ -25,12 +27,12 @@ export function resolveTurn(state: GameState, action: CombatAction): GameState {
     notice: '敌人倒下，打斗惊动寨中。风声 +25。',
   };
   const incoming = battle.intent === 'heavy' ? 16 : battle.intent === 'strike' ? 8 : 4;
-  const received = action.type === 'defend' ? Math.floor(incoming / 2) : action.type === 'movement' ? Math.floor(incoming / 4) : incoming;
+  const received = action.type === 'defend' ? Math.floor(incoming / 2) : action.type === 'movement' ? (artTags(state.permanent.learnedArts).includes('lightness') ? 0 : Math.floor(incoming / 4)) : incoming;
   const hp = Math.max(0, healedHp - received);
   const roll = rollD6(run.seed);
   const next: GameState = {
     ...state,
-    run: { ...run, hp, seed: roll.nextSeed, inventory, battle: { ...battle, enemyHp, round: battle.round + 1, intent: roll.value <= 2 ? 'strike' : roll.value <= 4 ? 'heavy' : 'guard', defending: action.type === 'defend' } },
+    run: { ...run, hp, seed: roll.nextSeed, inventory, heat: action.type === 'technique' ? addHeat(run.heat, 5) : run.heat, flags: action.type === 'technique' ? [...new Set([...run.flags, `witnessed_style:${action.artId}`])] : run.flags, battle: { ...battle, enemyHp, round: battle.round + 1, intent: roll.value <= 2 ? 'strike' : roll.value <= 4 ? 'heavy' : 'guard', defending: action.type === 'defend' } },
     notice: `你造成 ${damage} 点伤害，受 ${received} 点伤害。`,
   };
   return hp === 0 ? failRun(next) : next;

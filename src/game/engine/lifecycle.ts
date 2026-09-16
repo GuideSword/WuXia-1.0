@@ -17,7 +17,7 @@ export function createGame(): GameState {
   const permanent: PermanentState = {
     coins: 500,
     stash: {},
-    learnedArts: [],
+    learnedArts: ['basic_sword'],
     heardRumors: [],
     confirmedRumors: [],
     flags: [],

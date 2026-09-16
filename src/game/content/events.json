@@ -53,6 +53,20 @@
         "conditions": [{ "type": "flagAbsent", "value": "warehouse_looted" }],
         "effects": [{ "type": "addLoot", "value": "silver_ledger", "amount": 1 }, { "type": "setFlag", "value": "warehouse_looted" }, { "type": "addHeat", "value": 18 }],
         "riskHint": "负重 +15，价值 2000 两，风声 +18"
+      },
+      {
+        "id": "take_swallow_manual",
+        "label": "翻取燕回身秘笈",
+        "conditions": [{ "type": "flagAbsent", "value": "swallow_manual_taken" }],
+        "effects": [{ "type": "addLoot", "value": "swallow_manual", "amount": 1 }, { "type": "setFlag", "value": "swallow_manual_taken" }, { "type": "addHeat", "value": 8 }],
+        "riskHint": "负重 +1，风声 +8；撤离后可参悟"
+      },
+      {
+        "id": "take_breath_manual",
+        "label": "取走龟息功秘笈",
+        "conditions": [{ "type": "flagAbsent", "value": "breath_manual_taken" }],
+        "effects": [{ "type": "addLoot", "value": "breath_manual", "amount": 1 }, { "type": "setFlag", "value": "breath_manual_taken" }, { "type": "addHeat", "value": 8 }],
+        "riskHint": "负重 +1，风声 +8；撤离后可参悟"
       }
     ]
   },

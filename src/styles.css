@@ -23,6 +23,10 @@ h2 { font-size: 21px; font-weight: 400; }
 .town-row { border-bottom: 1px solid #ffffff18; display: flex; justify-content: space-between; align-items: center; padding: 11px 0; gap: 12px; }
 .town-row span { color: #e0d1b3; font-family: STKaiti, KaiTi, serif; font-size: 17px; }
 .town-row small { color: #8d897c; font-size: 10px; text-align: right; }
+.town-art { display: flex; justify-content: space-between; align-items: center; gap: 8px; width: 100%; color: #e0d1b3; background: #24261e; border: 1px solid #665a43; padding: 7px 10px; margin: 6px 0; text-align: left; }
+.town-art small { color: #ab9b7d; font-size: 10px; }
+.loadout-row { display: flex; justify-content: space-between; align-items: center; margin: 12px 0; font-size: 13px; }
+.loadout-row input { width: 58px; min-height: 44px; color: #eee0c8; background: #101411; border: 1px solid #6a5e49; text-align: center; }
 .bottom-action { position: absolute; z-index: 3; bottom: 0; left: 0; right: 0; padding: 16px 23px calc(17px + env(safe-area-inset-bottom)); background: linear-gradient(transparent, #111512 18%); }
 .primary-button { width: 100%; min-height: 52px; color: #fff0d8; background: #963e30; border: 1px solid #c3634e; font-size: 20px; letter-spacing: .18em; }
 .primary-button:hover:not(:disabled) { background: #aa4b3a; }

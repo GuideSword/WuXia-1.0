@@ -1,3 +1,8 @@
 [
-  { "id": "silver_ledger", "name": "官银包", "weight": 15, "kind": "loot", "coinValue": 2000, "description": "沉甸甸的银包，带走它会明显拖慢脚步。" }
+  { "id": "silver_ledger", "name": "官银包", "weight": 15, "kind": "loot", "coinValue": 2000, "description": "沉甸甸的银包，带走它会明显拖慢脚步。" },
+  { "id": "swallow_manual", "name": "燕回身秘笈", "weight": 1, "kind": "manual", "description": "轻功残本，带回练功处可参悟。" },
+  { "id": "breath_manual", "name": "龟息功秘笈", "weight": 1, "kind": "manual", "description": "潜水吐纳法门。" },
+  { "id": "wild_manual", "name": "狂风刀谱", "weight": 1, "kind": "manual" },
+  { "id": "taiji_manual", "name": "太极剑谱", "weight": 1, "kind": "manual" },
+  { "id": "acupoint_manual", "name": "点穴手谱", "weight": 1, "kind": "manual" }
 ]

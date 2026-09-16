@@ -1,6 +1,7 @@
 import type { Condition, Content, Effect, EventChoice, GameState, RunState } from '../model';
 import { moveTo } from './lifecycle';
 import { addHeat, heatLabels, heatStage } from './heat';
+import { runWeight } from './inventory';
 
 function hasItem(run: RunState, id: string): boolean {
   return (run.inventory[id] ?? 0) + (run.loot[id] ?? 0) > 0;
@@ -52,7 +53,11 @@ function applyEffect(state: GameState, effect: Effect, content: Content): GameSt
   switch (effect.type) {
     case 'move': return moveTo(state, id, content);
     case 'setFlag': return { ...state, run: { ...run, flags: [...new Set([...run.flags, id])] } };
-    case 'addLoot': return { ...state, run: { ...run, loot: { ...run.loot, [id]: (run.loot[id] ?? 0) + count } } };
+    case 'addLoot': {
+      const nextRun = { ...run, loot: { ...run.loot, [id]: (run.loot[id] ?? 0) + count } };
+      if (runWeight(nextRun, content) > 30) throw new Error('负重已达上限');
+      return { ...state, run: nextRun };
+    }
     case 'addHeat': return { ...state, run: { ...run, heat: addHeat(run.heat, Number(effect.value)) } };
     case 'addRumor': return { ...state, run: { ...run, pendingRumors: [...new Set([...run.pendingRumors, id])] } };
     case 'addItem': return { ...state, run: { ...run, inventory: { ...run.inventory, [id]: (run.inventory[id] ?? 0) + count } } };
