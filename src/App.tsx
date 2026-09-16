@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { loadBundledContent } from './game/content/load';
 import { extract, returnToTown, startRun } from './game/engine/lifecycle';
 import { chooseEvent, getChoices, getSceneText } from './game/engine/events';
+import { runWeight } from './game/engine/inventory';
 import type { EventChoice, GameState } from './game/model';
 import { loadGame, saveGame } from './game/save';
 import { ExploreScreen } from './ui/ExploreScreen';
@@ -39,7 +40,7 @@ export default function App() {
   const notice = storageError ?? (initial.recovered ? '已恢复上一稳定存档。' : null);
 
   if (game.phase === 'prep') {
-    return <><PrepScreen permanent={game.permanent} onBack={() => commit({ ...game, phase: 'town' })} onStart={(coins) => commit(startRun(game, {}, coins, Date.now()))} />{notice && <div className="floating-notice" role="status">{notice}</div>}</>;
+    return <><PrepScreen permanent={game.permanent} onBack={() => commit({ ...game, phase: 'town' })} onStart={(coins) => commit(startRun(game, {}, coins, Date.now(), content))} />{notice && <div className="floating-notice" role="status">{notice}</div>}</>;
   }
 
   if (game.phase === 'explore' && game.run) {
@@ -52,8 +53,9 @@ export default function App() {
         title={location?.name ?? '黑风寨'}
         description={getSceneText(game, content)}
         run={run}
+        weight={runWeight(run, content)}
         choices={choices}
-        onChoose={(id) => commit(id.startsWith('extract:') ? extract(game, 'gate') : chooseEvent(game, id, content))}
+        onChoose={(id) => commit(id.startsWith('extract:') ? extract(game, 'gate', content) : chooseEvent(game, id, content))}
       />
     );
   }

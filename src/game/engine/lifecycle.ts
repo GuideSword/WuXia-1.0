@@ -1,4 +1,5 @@
 import type { Content, Counts, GameState, Id, PermanentState, RunState } from '../model';
+import { canCarry } from './inventory';
 
 function addCounts(a: Counts, b: Counts): Counts {
   const merged = { ...a };
@@ -33,12 +34,14 @@ export function createGame(): GameState {
   };
 }
 
-export function startRun(state: GameState, loadout: Counts, carriedCoins: number, seed: number): GameState {
+export function startRun(state: GameState, loadout: Counts, carriedCoins: number, seed: number, content?: Content): GameState {
   if (state.run || !['town', 'prep', 'rumors'].includes(state.phase)) throw new Error('当前不能再次出发');
   if (!Number.isSafeInteger(carriedCoins) || carriedCoins < 0 || carriedCoins > state.permanent.coins) {
     throw new Error('携带银两数量无效');
   }
   if (!Number.isSafeInteger(seed)) throw new Error('随机种子无效');
+  if (Object.keys(loadout).length > 0 && !content) throw new Error('整备需要物品配置');
+  if (content && !canCarry(loadout, content.items)) throw new Error('负重超过 30');
   const stash = { ...state.permanent.stash };
   for (const [id, count] of Object.entries(loadout)) {
     if (!Number.isSafeInteger(count) || count < 0 || (stash[id] ?? 0) < count) throw new Error(`携带物资不足: ${id}`);
@@ -81,21 +84,29 @@ export function moveTo(state: GameState, destinationId: Id, content: Content): G
   return { ...state, safeLocationId: destinationId, notice: destination.description };
 }
 
-export function extract(state: GameState, routeId: Id): GameState {
+export function extract(state: GameState, routeId: Id, content?: Content): GameState {
   const run = requireRun(state);
   if (state.phase !== 'explore') throw new Error('当前不能撤离');
   if (routeId !== 'gate' || run.locationId !== 'gate') throw new Error('当前撤离路线不可用');
+  let convertedCoins = 0;
+  const retainedLoot: Counts = {};
+  for (const [id, count] of Object.entries(run.loot)) {
+    const item = content?.items.find((entry) => entry.id === id);
+    if (item?.coinValue) convertedCoins += item.coinValue * count;
+    else retainedLoot[id] = count;
+  }
+  const broughtCoins = run.coins + convertedCoins;
   return {
     ...state,
     phase: 'result',
     permanent: {
       ...state.permanent,
-      coins: state.permanent.coins + run.coins,
-      stash: addCounts(addCounts(state.permanent.stash, run.inventory), run.loot),
+      coins: state.permanent.coins + broughtCoins,
+      stash: addCounts(addCounts(state.permanent.stash, run.inventory), retainedLoot),
       confirmedRumors: [...new Set([...state.permanent.confirmedRumors, ...run.pendingRumors])],
     },
     run: null,
-    lastResult: { success: true, coins: run.coins, loot: { ...run.loot }, rumors: [...run.pendingRumors], lost: {}, route: routeId, message: '撤离成功。你将所得带回了青石镇。' },
+    lastResult: { success: true, coins: broughtCoins, loot: { ...run.loot }, rumors: [...run.pendingRumors], lost: {}, route: routeId, message: '撤离成功。你将所得带回了青石镇。' },
     notice: null,
   };
 }
