@@ -51,15 +51,27 @@ const GAME = z.object({
   notice: z.string().nullable(),
 });
 const ENVELOPE = z.object({ schemaVersion: z.literal(1), game: GAME });
+const LEGACY = z.object({ schemaVersion: z.literal(0), game: GAME.extend({ permanent: PERMANENT.partial({ learnedArts: true, heardRumors: true, confirmedRumors: true, flags: true, relations: true, raids: true }) }) });
 
 const CURRENT = 'wuxia.current';
 const GOOD = 'wuxia.lastKnownGood';
 const PENDING = 'wuxia.pending';
 
-function parseEnvelope(text: string): GameState {
+export function parseImport(text: string): GameState {
+  let parsed: unknown;
   try {
-    const parsed: unknown = JSON.parse(text);
-    const game = ENVELOPE.parse(parsed).game;
+    parsed = JSON.parse(text);
+  } catch {
+    throw new Error('存档 JSON 无法解析');
+  }
+  if (!parsed || typeof parsed !== 'object' || !('schemaVersion' in parsed)) throw new Error('存档版本缺失');
+  const version = (parsed as { schemaVersion: unknown }).schemaVersion;
+  if (version !== 0 && version !== 1) throw new Error(`不支持的存档版本：${String(version)}`);
+  try {
+    const game = version === 1 ? ENVELOPE.parse(parsed).game : (() => {
+      const legacy = LEGACY.parse(parsed).game;
+      return GAME.parse({ ...legacy, permanent: { ...createGame().permanent, ...legacy.permanent } });
+    })();
     if (!game.permanent.learnedArts.includes('basic_sword')) game.permanent.learnedArts.unshift('basic_sword');
     return game;
   } catch (error) {
@@ -67,15 +79,28 @@ function parseEnvelope(text: string): GameState {
   }
 }
 
+export function exportSave(game: GameState): string {
+  const text = JSON.stringify({ schemaVersion: 1, game }, null, 2);
+  parseImport(text);
+  return text;
+}
+
+export function commitImport(storage: Storage, game: GameState): void {
+  saveGame(storage, game);
+}
+
 export function saveGame(storage: Storage, game: GameState): void {
   const payload = JSON.stringify({ schemaVersion: 1, game });
-  parseEnvelope(payload);
+  parseImport(payload);
   storage.setItem(PENDING, payload);
-  parseEnvelope(storage.getItem(PENDING) ?? '');
+  parseImport(storage.getItem(PENDING) ?? '');
   const previous = storage.getItem(CURRENT);
   if (previous) {
-    try { parseEnvelope(previous); storage.setItem(GOOD, previous); }
-    catch { if (!storage.getItem(GOOD)) storage.setItem(GOOD, payload); }
+    try { parseImport(previous); storage.setItem(GOOD, previous); }
+    catch {
+      try { parseImport(storage.getItem(GOOD) ?? ''); }
+      catch { storage.setItem(GOOD, payload); }
+    }
   } else {
     storage.setItem(GOOD, payload);
   }
@@ -88,11 +113,11 @@ export function loadGame(storage: Storage, onRecovery?: () => void): GameState {
   const backup = storage.getItem(GOOD);
   if (!current && !backup) return createGame();
   if (current) {
-    try { return parseEnvelope(current); } catch { /* 保留原文，尝试安全副本 */ }
+    try { return parseImport(current); } catch { /* 保留原文，尝试安全副本 */ }
   }
   if (backup) {
     try {
-      const game = parseEnvelope(backup);
+      const game = parseImport(backup);
       onRecovery?.();
       return game;
     } catch { /* 两份皆损坏时禁止静默清档 */ }

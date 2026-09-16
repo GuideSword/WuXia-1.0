@@ -29,6 +29,13 @@ h2 { font-size: 21px; font-weight: 400; }
 .rumor-card h2 { margin: 0 0 8px; }
 .rumor-card p { color: #c9baa1; font-size: 12px; line-height: 1.55; }
 .rumor-card button { color: #e9dac0; background: #713126; border: 1px solid #a45440; padding: 7px 12px; }
+.save-drawer { margin-top: 24px; border-top: 1px solid #665a43; padding-top: 12px; }
+.save-drawer summary { cursor: pointer; color: #d3bd99; min-height: 44px; }
+.save-drawer button, .error-actions button { color: #e9dec8; background: #333126; border: 1px solid #8d7555; padding: 8px 12px; margin: 5px 6px 5px 0; }
+.save-drawer label { display: block; margin: 12px 0 6px; font-size: 13px; }
+.save-drawer input { max-width: 100%; color: #d8c7aa; }
+.confirm-box { border: 1px solid #a45141; background: #38271f; margin-top: 12px; padding: 12px; font-size: 13px; line-height: 1.5; }
+.error-page { padding-top: 12dvh; }
 .loadout-row { display: flex; justify-content: space-between; align-items: center; margin: 12px 0; font-size: 13px; }
 .loadout-row input { width: 58px; min-height: 44px; color: #eee0c8; background: #101411; border: 1px solid #6a5e49; text-align: center; }
 .bottom-action { position: absolute; z-index: 3; bottom: 0; left: 0; right: 0; padding: 16px 23px calc(17px + env(safe-area-inset-bottom)); background: linear-gradient(transparent, #111512 18%); }

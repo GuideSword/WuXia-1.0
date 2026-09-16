@@ -12,9 +12,15 @@ interface Props {
   onLearn: (artId: string) => void;
   onVisit: (locationId: string) => void;
   onBuy: (npcId: string, itemId: string) => void;
+  onExport: () => void;
+  onImportFile: (file: File) => void;
+  importPending: boolean;
+  importError: string | null;
+  onConfirmImport: () => void;
+  onCancelImport: () => void;
 }
 
-export function TownScreen({ permanent, arts, location, nextLocations, npcs, items, onPrep, onRumors, onLearn, onVisit, onBuy }: Props) {
+export function TownScreen({ permanent, arts, location, nextLocations, npcs, items, onPrep, onRumors, onLearn, onVisit, onBuy, onExport, onImportFile, importPending, importError, onConfirmImport, onCancelImport }: Props) {
   const learnable = arts.filter((art) => art.manualItemId && !permanent.learnedArts.includes(art.id));
   const here = npcs.filter((npc) => npc.locationId === location.id);
   return (
@@ -47,6 +53,14 @@ export function TownScreen({ permanent, arts, location, nextLocations, npcs, ite
           <p className="hint">已掌握：{arts.filter((art) => permanent.learnedArts.includes(art.id)).map((art) => art.name).join('、')}</p>
           {learnable.map((art) => <button className="town-art" key={art.id} type="button" disabled={!permanent.stash[art.manualItemId!]} onClick={() => onLearn(art.id)}>参悟{art.name}<small>{permanent.stash[art.manualItemId!] ? '消耗秘笈 ×1' : '尚未带回秘籍'}</small></button>)}
         </section>}
+        <details className="save-drawer"><summary>存档 · 导入与导出</summary>
+          <p className="hint">无需账号，进度自动保存在此浏览器。清除网站数据会丢失进度，请定期导出备份。</p>
+          <button type="button" onClick={onExport}>导出存档</button>
+          <label htmlFor="save-import">选择 JSON 存档文件</label>
+          <input id="save-import" type="file" accept=".json,application/json" onChange={(event) => { const file = event.target.files?.[0]; if (file) onImportFile(file); event.target.value = ''; }} />
+          {importError && <p role="alert" className="field-error">{importError}</p>}
+          {importPending && <div className="confirm-box"><p>存档校验通过。确认替换当前进度？当前存档仍可从“上一稳定档”恢复。</p><button type="button" onClick={onConfirmImport}>确认导入并替换</button><button type="button" onClick={onCancelImport}>取消导入</button></div>}
+        </details>
       </div>
       <div className="bottom-action"><button className="primary-button" type="button" onClick={onPrep}>出发整备</button></div>
     </main>

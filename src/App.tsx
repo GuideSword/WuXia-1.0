@@ -6,7 +6,7 @@ import { runWeight } from './game/engine/inventory';
 import { resolveTurn } from './game/engine/combat';
 import { attemptExit, evaluateExit, exitContext, exitIds, exitNames, type ExitId } from './game/engine/exits';
 import type { EventChoice, GameState } from './game/model';
-import { loadGame, saveGame } from './game/save';
+import { commitImport, exportSave, loadGame, parseImport, saveGame } from './game/save';
 import { ExploreScreen } from './ui/ExploreScreen';
 import { PrepScreen } from './ui/PrepScreen';
 import { ResultScreen } from './ui/ResultScreen';
@@ -16,6 +16,9 @@ import { learnArt } from './game/engine/martial';
 import { hearRumor } from './game/engine/rumors';
 import { RumorScreen } from './ui/RumorScreen';
 import { buyItem } from './game/engine/shop';
+import { ErrorScreen } from './ui/ErrorScreen';
+import { downloadText } from './ui/download';
+import { createGame } from './game/engine/lifecycle';
 
 export default function App() {
   const content = useMemo(loadBundledContent, []);
@@ -29,9 +32,11 @@ export default function App() {
   }, []);
   const [game, setGame] = useState<GameState | null>(initial.game);
   const [storageError, setStorageError] = useState<string | null>(null);
+  const [pendingImport, setPendingImport] = useState<GameState | null>(null);
+  const [importError, setImportError] = useState<string | null>(null);
 
   if (!game) {
-    return <main className="page"><div className="page-content"><h1>存档需要处理</h1><p role="alert">{initial.error}</p><p className="hint">原始存档仍保留在浏览器中。请勿清除网站数据。</p></div></main>;
+    return <ErrorScreen error={initial.error ?? '存档无法读取'} onExport={() => downloadText('wuxia-diagnostic.json', JSON.stringify({ current: localStorage.getItem('wuxia.current'), lastKnownGood: localStorage.getItem('wuxia.lastKnownGood') }, null, 2))} onReset={() => { downloadText('wuxia-raw-backup.json', JSON.stringify({ current: localStorage.getItem('wuxia.current'), lastKnownGood: localStorage.getItem('wuxia.lastKnownGood') }, null, 2)); const fresh = createGame(); saveGame(localStorage, fresh); setGame(fresh); }} />;
   }
 
   function commit(next: GameState) {
@@ -83,5 +88,5 @@ export default function App() {
 
   const location = content.locations.find((entry) => entry.id === game.safeLocationId) ?? content.locations[0];
   const nextLocations = location.next.map((id) => content.locations.find((entry) => entry.id === id)).filter((entry): entry is NonNullable<typeof entry> => !!entry);
-  return <><TownScreen permanent={game.permanent} arts={content.arts} location={location} nextLocations={nextLocations} npcs={content.npcs} items={content.items} onVisit={(id) => commit(moveTo(game, id, content))} onBuy={(npcId, itemId) => commit(buyItem(game, npcId, itemId, content))} onLearn={(artId) => commit(learnArt(game, artId))} onRumors={() => commit({ ...game, safeLocationId: 'teahouse', phase: 'rumors' })} onPrep={() => commit({ ...game, phase: 'prep' })} />{notice && <div className="floating-notice" role="status">{notice}</div>}</>;
+  return <><TownScreen permanent={game.permanent} arts={content.arts} location={location} nextLocations={nextLocations} npcs={content.npcs} items={content.items} onVisit={(id) => commit(moveTo(game, id, content))} onBuy={(npcId, itemId) => commit(buyItem(game, npcId, itemId, content))} onLearn={(artId) => commit(learnArt(game, artId))} onRumors={() => commit({ ...game, safeLocationId: 'teahouse', phase: 'rumors' })} onPrep={() => commit({ ...game, phase: 'prep' })} onExport={() => downloadText('wuxia-save.json', exportSave(game))} onImportFile={(file) => { void file.text().then((text) => { setPendingImport(parseImport(text)); setImportError(null); }).catch((error: unknown) => { setPendingImport(null); setImportError(error instanceof Error ? error.message : '导入失败'); }); }} importPending={!!pendingImport} importError={importError} onConfirmImport={() => { if (!pendingImport) return; try { commitImport(localStorage, pendingImport); setGame(pendingImport); setPendingImport(null); setImportError(null); } catch (error) { setImportError(error instanceof Error ? error.message : '无法导入存档'); } }} onCancelImport={() => setPendingImport(null)} />{notice && <div className="floating-notice" role="status">{notice}</div>}</>;
 }
