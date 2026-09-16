@@ -1,5 +1,20 @@
 [
   {
+    "id": "second_chief_encounter",
+    "locationId": "second_chief_room",
+    "npcId": "second_chief",
+    "text": "二当家抬眼看见你，手已搭在刀柄上。",
+    "choices": [
+      {
+        "id": "challenge_second_chief",
+        "label": "迎战二当家",
+        "conditions": [{ "type": "flagAbsent", "value": "second_chief_defeated" }],
+        "effects": [{ "type": "startBattle", "value": "second_chief" }],
+        "riskHint": "对手气血 36；可撤退"
+      }
+    ]
+  },
+  {
     "id": "foothill_watch",
     "locationId": "foothill",
     "text": "山脚有几名巡逻喽啰，远处隐约传来机关铃响。你可以避开，也可以主动制造混乱。",

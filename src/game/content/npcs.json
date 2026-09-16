@@ -1,1 +1,3 @@
-[]
+[
+  { "id": "second_chief", "name": "二当家", "locationId": "second_chief_room", "hp": 36, "description": "出刀刚猛，重击前会先蓄势。" }
+]

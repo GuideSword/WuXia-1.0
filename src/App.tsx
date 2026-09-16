@@ -4,12 +4,14 @@ import { extract, returnToTown, startRun } from './game/engine/lifecycle';
 import { chooseEvent, getChoices, getSceneText } from './game/engine/events';
 import { runWeight } from './game/engine/inventory';
 import { canUseGate } from './game/engine/heat';
+import { resolveTurn } from './game/engine/combat';
 import type { EventChoice, GameState } from './game/model';
 import { loadGame, saveGame } from './game/save';
 import { ExploreScreen } from './ui/ExploreScreen';
 import { PrepScreen } from './ui/PrepScreen';
 import { ResultScreen } from './ui/ResultScreen';
 import { TownScreen } from './ui/TownScreen';
+import { CombatScreen } from './ui/CombatScreen';
 
 export default function App() {
   const content = useMemo(loadBundledContent, []);
@@ -60,6 +62,10 @@ export default function App() {
         onChoose={(id) => commit(id.startsWith('extract:') ? extract(game, 'gate', content) : chooseEvent(game, id, content))}
       />
     );
+  }
+
+  if (game.phase === 'combat' && game.run?.battle) {
+    return <CombatScreen battle={game.run.battle} hp={game.run.hp} items={game.run.inventory} availableTechniques={game.permanent.learnedArts.map((id) => ({ id, name: content.arts.find((art) => art.id === id)?.name ?? id }))} notice={game.notice} onAction={(action) => commit(resolveTurn(game, action))} />;
   }
 
   if (game.phase === 'result' && game.lastResult) return <ResultScreen result={game.lastResult} onReturn={() => commit(returnToTown(game))} />;

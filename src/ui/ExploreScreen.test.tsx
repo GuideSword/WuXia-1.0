@@ -30,3 +30,14 @@ test('刷新后恢复山门与已完成的结算', () => {
   render(<App />);
   expect(screen.getByRole('heading', { name: '撤离成功' })).toBeInTheDocument();
 });
+
+test('从探索进入二当家战斗，再撤出回到探索', () => {
+  render(<App />);
+  for (const label of ['出发整备', '前往黑风寨', '前往山门', '前往西仓', '前往二当家偏房', '迎战二当家']) {
+    fireEvent.click(screen.getByRole('button', { name: label }));
+  }
+  expect(screen.getByRole('heading', { name: '刀光相向' })).toBeInTheDocument();
+  fireEvent.click(screen.getByRole('button', { name: /撤出战斗/ }));
+  expect(screen.getByRole('heading', { name: '二当家偏房' })).toBeInTheDocument();
+  expect(screen.getByText('15', { selector: 'strong' })).toBeInTheDocument();
+});
