@@ -1,0 +1,10 @@
+:root {
+  font-family: "Microsoft YaHei", system-ui, sans-serif;
+  color: #eee4d0;
+  background: #101412;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; }
+button { min-height: 44px; font: inherit; cursor: pointer; }
+.app { width: min(100%, 430px); min-height: 100dvh; margin: 0 auto; padding: 24px; }
