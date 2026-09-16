@@ -3,6 +3,7 @@ import { loadBundledContent } from './game/content/load';
 import { extract, returnToTown, startRun } from './game/engine/lifecycle';
 import { chooseEvent, getChoices, getSceneText } from './game/engine/events';
 import { runWeight } from './game/engine/inventory';
+import { canUseGate } from './game/engine/heat';
 import type { EventChoice, GameState } from './game/model';
 import { loadGame, saveGame } from './game/save';
 import { ExploreScreen } from './ui/ExploreScreen';
@@ -47,11 +48,12 @@ export default function App() {
     const run = game.run;
     const location = content.locations.find((entry) => entry.id === run.locationId);
     const choices: EventChoice[] = getChoices(game, content);
-    if (run.locationId === 'gate') choices.push({ id: 'extract:gate', label: '从山门撤离', conditions: [], effects: [], riskHint: '安全路线' });
+    if (canUseGate(run)) choices.push({ id: 'extract:gate', label: '从山门撤离', conditions: [], effects: [], riskHint: '按当前风声放行' });
     return (
       <ExploreScreen
         title={location?.name ?? '黑风寨'}
         description={getSceneText(game, content)}
+        notice={game.notice}
         run={run}
         weight={runWeight(run, content)}
         choices={choices}

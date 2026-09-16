@@ -1,5 +1,33 @@
 [
   {
+    "id": "foothill_watch",
+    "locationId": "foothill",
+    "text": "山脚有几名巡逻喽啰，远处隐约传来机关铃响。你可以避开，也可以主动制造混乱。",
+    "choices": [
+      {
+        "id": "pass_silently",
+        "label": "静默通过巡逻",
+        "conditions": [{ "type": "flagAbsent", "value": "patrol_passed" }, { "type": "heatBelow", "value": "75" }],
+        "effects": [{ "type": "setFlag", "value": "patrol_passed" }],
+        "riskHint": "风声 +0；追捕后此路关闭"
+      },
+      {
+        "id": "trigger_trap",
+        "label": "触发机关引开守卫",
+        "conditions": [{ "type": "flagAbsent", "value": "trap_triggered" }],
+        "effects": [{ "type": "setFlag", "value": "trap_triggered" }, { "type": "addHeat", "value": 18 }],
+        "riskHint": "风声 +18"
+      },
+      {
+        "id": "fight_patrol",
+        "label": "与巡逻喽啰打斗",
+        "conditions": [{ "type": "flagAbsent", "value": "patrol_fought" }],
+        "effects": [{ "type": "setFlag", "value": "patrol_fought" }, { "type": "addHeat", "value": 25 }],
+        "riskHint": "风声 +25"
+      }
+    ]
+  },
+  {
     "id": "warehouse_search",
     "locationId": "warehouse",
     "text": "仓内无灯，布下似乎压着一只沉重的银包。门外的脚步声越来越近。",
@@ -8,8 +36,29 @@
         "id": "take_silver",
         "label": "带走官银包",
         "conditions": [{ "type": "flagAbsent", "value": "warehouse_looted" }],
-        "effects": [{ "type": "addLoot", "value": "silver_ledger", "amount": 1 }, { "type": "setFlag", "value": "warehouse_looted" }],
-        "riskHint": "负重 +15，价值 2000 两"
+        "effects": [{ "type": "addLoot", "value": "silver_ledger", "amount": 1 }, { "type": "setFlag", "value": "warehouse_looted" }, { "type": "addHeat", "value": 18 }],
+        "riskHint": "负重 +15，价值 2000 两，风声 +18"
+      }
+    ]
+  },
+  {
+    "id": "gate_patrol",
+    "locationId": "gate",
+    "text": "山门的火把照过每张面孔。风声越紧，守卫越不肯放行。",
+    "choices": [
+      {
+        "id": "raise_alarm",
+        "label": "故意引开巡逻",
+        "conditions": [{ "type": "flagAbsent", "value": "alarm_raised" }],
+        "effects": [{ "type": "addHeat", "value": 35 }, { "type": "setFlag", "value": "alarm_raised" }],
+        "riskHint": "风声 +35，可观察封寨变化"
+      },
+      {
+        "id": "pass_gate_check",
+        "label": "接受山门盘查",
+        "conditions": [{ "type": "heatAtLeast", "value": "50" }, { "type": "flagAbsent", "value": "gate_cleared" }],
+        "effects": [{ "type": "setFlag", "value": "gate_cleared" }, { "type": "addHeat", "value": 8 }],
+        "riskHint": "放行后风声 +8；封寨时仍不可离开"
       }
     ]
   }

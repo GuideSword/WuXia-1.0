@@ -1,5 +1,6 @@
 import type { Condition, Content, Effect, EventChoice, GameState, RunState } from '../model';
 import { moveTo } from './lifecycle';
+import { addHeat, heatLabels, heatStage } from './heat';
 
 function hasItem(run: RunState, id: string): boolean {
   return (run.inventory[id] ?? 0) + (run.loot[id] ?? 0) > 0;
@@ -52,7 +53,7 @@ function applyEffect(state: GameState, effect: Effect, content: Content): GameSt
     case 'move': return moveTo(state, id, content);
     case 'setFlag': return { ...state, run: { ...run, flags: [...new Set([...run.flags, id])] } };
     case 'addLoot': return { ...state, run: { ...run, loot: { ...run.loot, [id]: (run.loot[id] ?? 0) + count } } };
-    case 'addHeat': return { ...state, run: { ...run, heat: Math.min(100, Math.max(0, run.heat + Number(effect.value))) } };
+    case 'addHeat': return { ...state, run: { ...run, heat: addHeat(run.heat, Number(effect.value)) } };
     case 'addRumor': return { ...state, run: { ...run, pendingRumors: [...new Set([...run.pendingRumors, id])] } };
     case 'addItem': return { ...state, run: { ...run, inventory: { ...run.inventory, [id]: (run.inventory[id] ?? 0) + count } } };
     case 'takeItem': {
@@ -74,5 +75,8 @@ function applyEffect(state: GameState, effect: Effect, content: Content): GameSt
 export function chooseEvent(state: GameState, choiceId: string, content: Content): GameState {
   const choice = getChoices(state, content).find((entry) => entry.id === choiceId);
   if (!choice) throw new Error(`当前选项不可用：${choiceId}`);
-  return choice.effects.reduce((next, effect) => applyEffect(next, effect, content), state);
+  const next = choice.effects.reduce((current, effect) => applyEffect(current, effect, content), state);
+  const before = heatStage(state.run?.heat ?? 0);
+  const after = heatStage(next.run?.heat ?? 0);
+  return before === after ? next : { ...next, notice: `风声已升至「${heatLabels[after]}」。` };
 }

@@ -1,5 +1,6 @@
 import type { Content, Counts, GameState, Id, PermanentState, RunState } from '../model';
 import { canCarry } from './inventory';
+import { canUseGate } from './heat';
 
 function addCounts(a: Counts, b: Counts): Counts {
   const merged = { ...a };
@@ -87,7 +88,7 @@ export function moveTo(state: GameState, destinationId: Id, content: Content): G
 export function extract(state: GameState, routeId: Id, content?: Content): GameState {
   const run = requireRun(state);
   if (state.phase !== 'explore') throw new Error('当前不能撤离');
-  if (routeId !== 'gate' || run.locationId !== 'gate') throw new Error('当前撤离路线不可用');
+  if (routeId !== 'gate' || !canUseGate(run)) throw new Error('当前撤离路线不可用');
   let convertedCoins = 0;
   const retainedLoot: Counts = {};
   for (const [id, count] of Object.entries(run.loot)) {
