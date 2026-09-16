@@ -1,1 +1,16 @@
-[]
+[
+  {
+    "id": "warehouse_search",
+    "locationId": "warehouse",
+    "text": "仓内无灯，布下似乎压着一只沉重的银包。门外的脚步声越来越近。",
+    "choices": [
+      {
+        "id": "take_silver",
+        "label": "带走官银包",
+        "conditions": [{ "type": "flagAbsent", "value": "warehouse_looted" }],
+        "effects": [{ "type": "addLoot", "value": "silver_ledger", "amount": 1 }, { "type": "setFlag", "value": "warehouse_looted" }],
+        "riskHint": "负重 +15，价值 2000 两"
+      }
+    ]
+  }
+]

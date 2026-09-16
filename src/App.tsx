@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { loadBundledContent } from './game/content/load';
-import { extract, moveTo, returnToTown, startRun } from './game/engine/lifecycle';
+import { extract, returnToTown, startRun } from './game/engine/lifecycle';
+import { chooseEvent, getChoices, getSceneText } from './game/engine/events';
 import type { EventChoice, GameState } from './game/model';
 import { loadGame, saveGame } from './game/save';
 import { ExploreScreen } from './ui/ExploreScreen';
@@ -44,15 +45,15 @@ export default function App() {
   if (game.phase === 'explore' && game.run) {
     const run = game.run;
     const location = content.locations.find((entry) => entry.id === run.locationId);
-    const choices: EventChoice[] = (location?.next ?? []).map((id) => ({ id: `go:${id}`, label: `前往${content.locations.find((entry) => entry.id === id)?.name.replace('黑风寨', '') ?? id}`, conditions: [], effects: [], riskHint: '转移地点' }));
+    const choices: EventChoice[] = getChoices(game, content);
     if (run.locationId === 'gate') choices.push({ id: 'extract:gate', label: '从山门撤离', conditions: [], effects: [], riskHint: '安全路线' });
     return (
       <ExploreScreen
         title={location?.name ?? '黑风寨'}
-        description={location?.description ?? ''}
+        description={getSceneText(game, content)}
         run={run}
         choices={choices}
-        onChoose={(id) => commit(id.startsWith('go:') ? moveTo(game, id.slice(3), content) : extract(game, 'gate'))}
+        onChoose={(id) => commit(id.startsWith('extract:') ? extract(game, 'gate') : chooseEvent(game, id, content))}
       />
     );
   }

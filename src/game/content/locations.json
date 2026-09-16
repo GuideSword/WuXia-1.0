@@ -1,5 +1,6 @@
 [
   { "id": "town_square", "name": "青石镇", "kind": "safe", "next": [], "description": "镇口的石板路向四方延伸。江湖传言都要在此落脚。" },
   { "id": "foothill", "name": "黑风寨山脚", "kind": "danger", "next": ["gate"], "description": "山风从松林里穿过，寨门的火把在夜色里忽明忽暗。" },
-  { "id": "gate", "name": "黑风寨山门", "kind": "danger", "next": ["foothill"], "description": "两名守卫倚着门柱，山道从这里折入寨中。" }
+  { "id": "gate", "name": "黑风寨山门", "kind": "danger", "next": ["foothill", "warehouse"], "description": "两名守卫倚着门柱，山道从这里折入寨中。" },
+  { "id": "warehouse", "name": "西仓", "kind": "danger", "next": ["gate"], "description": "仓门半掩，木箱上落着一层薄灰。外面有人巡行。" }
 ]

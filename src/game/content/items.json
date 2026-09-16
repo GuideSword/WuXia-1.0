@@ -1,1 +1,3 @@
-[]
+[
+  { "id": "silver_ledger", "name": "官银包", "weight": 15, "kind": "loot", "coinValue": 2000, "description": "沉甸甸的银包，带走它会明显拖慢脚步。" }
+]
