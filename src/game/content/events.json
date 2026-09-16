@@ -20,6 +20,13 @@
     "text": "山脚有几名巡逻喽啰，远处隐约传来机关铃响。你可以避开，也可以主动制造混乱。",
     "choices": [
       {
+        "id": "take_mask",
+        "label": "拾取遗落的蒙面巾",
+        "conditions": [{ "type": "flagAbsent", "value": "mask_taken" }],
+        "effects": [{ "type": "addItem", "value": "mask", "amount": 1 }, { "type": "setFlag", "value": "mask_taken" }],
+        "riskHint": "负重 +1；可尝试商队撤离"
+      },
+      {
         "id": "pass_silently",
         "label": "静默通过巡逻",
         "conditions": [{ "type": "flagAbsent", "value": "patrol_passed" }, { "type": "heatBelow", "value": "75" }],

@@ -4,5 +4,6 @@
   { "id": "breath_manual", "name": "龟息功秘笈", "weight": 1, "kind": "manual", "description": "潜水吐纳法门。" },
   { "id": "wild_manual", "name": "狂风刀谱", "weight": 1, "kind": "manual" },
   { "id": "taiji_manual", "name": "太极剑谱", "weight": 1, "kind": "manual" },
-  { "id": "acupoint_manual", "name": "点穴手谱", "weight": 1, "kind": "manual" }
+  { "id": "acupoint_manual", "name": "点穴手谱", "weight": 1, "kind": "manual" },
+  { "id": "mask", "name": "蒙面巾", "weight": 1, "kind": "equipment", "buyPrice": 30, "description": "商队混行时可遮掩面容。" }
 ]

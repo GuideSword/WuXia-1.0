@@ -89,6 +89,12 @@ export function extract(state: GameState, routeId: Id, content?: Content): GameS
   const run = requireRun(state);
   if (state.phase !== 'explore') throw new Error('当前不能撤离');
   if (routeId !== 'gate' || !canUseGate(run)) throw new Error('当前撤离路线不可用');
+  return settleExtraction(state, routeId, content);
+}
+
+export function settleExtraction(state: GameState, routeId: Id, content?: Content, lost: Counts = {}): GameState {
+  const run = requireRun(state);
+  if (state.phase !== 'explore') throw new Error('当前不能撤离');
   let convertedCoins = 0;
   const retainedLoot: Counts = {};
   for (const [id, count] of Object.entries(run.loot)) {
@@ -107,7 +113,7 @@ export function extract(state: GameState, routeId: Id, content?: Content): GameS
       confirmedRumors: [...new Set([...state.permanent.confirmedRumors, ...run.pendingRumors])],
     },
     run: null,
-    lastResult: { success: true, coins: broughtCoins, loot: { ...run.loot }, rumors: [...run.pendingRumors], lost: {}, route: routeId, message: '撤离成功。你将所得带回了青石镇。' },
+    lastResult: { success: true, coins: broughtCoins, loot: { ...run.loot }, rumors: [...run.pendingRumors], lost, route: routeId, message: `撤离成功。你从${{ gate: '山门', cliff: '悬崖', waterway: '水道', caravan: '商队', tunnel: '后山密道' }[routeId] ?? routeId}离开，将所得带回青石镇。` },
     notice: null,
   };
 }

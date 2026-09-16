@@ -1,10 +1,10 @@
 import { useMemo, useState } from 'react';
 import { loadBundledContent } from './game/content/load';
-import { extract, returnToTown, startRun } from './game/engine/lifecycle';
+import { returnToTown, startRun } from './game/engine/lifecycle';
 import { chooseEvent, getChoices, getSceneText } from './game/engine/events';
 import { runWeight } from './game/engine/inventory';
-import { canUseGate } from './game/engine/heat';
 import { resolveTurn } from './game/engine/combat';
+import { attemptExit, evaluateExit, exitContext, exitIds, exitNames, type ExitId } from './game/engine/exits';
 import type { EventChoice, GameState } from './game/model';
 import { loadGame, saveGame } from './game/save';
 import { ExploreScreen } from './ui/ExploreScreen';
@@ -51,7 +51,8 @@ export default function App() {
     const run = game.run;
     const location = content.locations.find((entry) => entry.id === run.locationId);
     const choices: EventChoice[] = getChoices(game, content);
-    if (canUseGate(run)) choices.push({ id: 'extract:gate', label: '从山门撤离', conditions: [], effects: [], riskHint: '按当前风声放行' });
+    const context = exitContext(game, content);
+    const exits = exitIds.map((id) => ({ id, name: exitNames[id], evaluation: evaluateExit(id, context) }));
     return (
       <ExploreScreen
         title={location?.name ?? '黑风寨'}
@@ -60,7 +61,8 @@ export default function App() {
         run={run}
         weight={runWeight(run, content)}
         choices={choices}
-        onChoose={(id) => commit(id.startsWith('extract:') ? extract(game, 'gate', content) : chooseEvent(game, id, content))}
+        exits={exits}
+        onChoose={(id) => commit(id.startsWith('extract:') ? attemptExit(game, id.slice(8) as ExitId, content) : chooseEvent(game, id, content))}
       />
     );
   }
