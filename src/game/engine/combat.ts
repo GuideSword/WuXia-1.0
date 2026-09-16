@@ -14,7 +14,7 @@ export function resolveTurn(state: GameState, action: CombatAction): GameState {
   if (action.type === 'item' && !run.inventory.medicine) throw new Error('金疮药不足');
   if (action.type === 'technique' && !state.permanent.learnedArts.includes(action.artId ?? '')) throw new Error('尚未掌握这门武学');
   const enemyGuard = battle.intent === 'guard';
-  const baseDamage = action.type === 'attack' ? 8 : action.type === 'technique' ? 12 : 0;
+  const baseDamage = action.type === 'attack' ? 8 + (run.inventory.sword ? 2 : 0) : action.type === 'technique' ? 12 + (run.inventory.sword ? 2 : 0) : 0;
   const techniqueBonus = action.type === 'technique' && action.artId === 'taiji_sword' && battle.intent === 'heavy' ? 4 : 0;
   const damage = enemyGuard ? Math.floor((baseDamage + techniqueBonus) / 2) : baseDamage + techniqueBonus;
   const enemyHp = Math.max(0, battle.enemyHp - damage);

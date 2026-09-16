@@ -9,8 +9,8 @@ test('太极剑以柔克刚，以后发制先手', () => {
   expect(counterBonus(['soft', 'counter'], ['hard', 'first'])).toBeGreaterThan(0);
 });
 test('没有带回秘籍不能参悟，带回后消耗秘籍并记住武学', () => {
-  expect(() => learnArt(createGame(), 'swallow_step')).toThrow(/秘籍/);
-  const game = createGame();
+  const game = { ...createGame(), safeLocationId: 'training_yard' };
+  expect(() => learnArt(game, 'swallow_step')).toThrow(/秘籍/);
   game.permanent.stash.swallow_manual = 1;
   const learned = learnArt(game, 'swallow_step');
   expect(learned.permanent.learnedArts).toContain('swallow_step');

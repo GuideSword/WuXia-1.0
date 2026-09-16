@@ -20,7 +20,7 @@ export function RumorScreen({ rumors, heard, confirmed, selected, coins, onHear,
       <p className="intro">听来的事未必是真。先探听，再入寨找证据。现有银两 {coins}。</p>
       <div className="rumor-list">
         {rumors.map((rumor) => {
-          const known = heard.includes(rumor.id);
+          const known = heard.includes(rumor.id) || confirmed.includes(rumor.id);
           const proven = confirmed.includes(rumor.id);
           return <article className="rumor-card" key={rumor.id}>
             <h2>{rumor.title}</h2>

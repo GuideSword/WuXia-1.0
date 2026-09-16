@@ -1,3 +1,13 @@
 [
-  { "id": "second_chief", "name": "二当家", "locationId": "second_chief_room", "hp": 36, "description": "出刀刚猛，重击前会先蓄势。" }
+  { "id": "innkeeper", "name": "客栈掌柜", "locationId": "inn", "itemsSold": ["medicine"], "description": "给远行人备着急用药。" },
+  { "id": "storyteller", "name": "茶馆说书人", "locationId": "teahouse", "rumorsOffered": ["western_scripture", "gate_shift", "west_warehouse", "chief_return", "tunnel_entrance", "water_channel", "cliff_path", "caravan_departure", "prisoner_name", "guard_bribe", "hidden_cell", "roof_beam", "alarm_bell", "medicine_cache", "smuggler_mark", "blood_script_origin", "chief_secret", "false_scroll"] },
+  { "id": "physician", "name": "药铺郎中", "locationId": "clinic", "itemsSold": ["medicine"] },
+  { "id": "broker", "name": "黑市掮客", "locationId": "black_market", "itemsSold": ["sword", "throwing_knife", "mask", "rope", "lantern", "smoke_bomb"] },
+  { "id": "trainer", "name": "练功师父", "locationId": "training_yard", "itemsSold": ["wild_manual"] },
+  { "id": "caravan_master", "name": "商队领队", "locationId": "foothill", "rumorsOffered": ["caravan_departure"] },
+  { "id": "gate_guard", "name": "山门守卫", "locationId": "gate", "rumorsOffered": ["gate_shift"] },
+  { "id": "warehouse_guard", "name": "西仓守卫", "locationId": "warehouse", "rumorsOffered": ["west_warehouse"] },
+  { "id": "prisoner", "name": "暗牢囚犯", "locationId": "prisoner_cell", "rumorsOffered": ["tunnel_entrance"] },
+  { "id": "second_chief", "name": "二当家", "locationId": "second_chief_room", "hp": 36, "description": "出刀刚猛，重击前会先蓄势。" },
+  { "id": "chief", "name": "寨主", "locationId": "chief_secret", "hp": 55, "description": "风声紧时可能追来。" }
 ]

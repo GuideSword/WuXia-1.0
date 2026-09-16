@@ -15,7 +15,7 @@ export function counterBonus(ours: string[], theirs: string[]): number {
 }
 
 export function learnArt(state: GameState, artId: string): GameState {
-  if (state.phase !== 'town' || state.run) throw new Error('只能在青石镇参悟');
+  if (state.phase !== 'town' || state.run || state.safeLocationId !== 'training_yard') throw new Error('只能在练功处参悟');
   const art = loadBundledContent().arts.find((entry) => entry.id === artId);
   if (!art) throw new Error('未知武学');
   if (state.permanent.learnedArts.includes(artId)) throw new Error('已掌握这门武学');

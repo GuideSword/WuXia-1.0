@@ -47,6 +47,7 @@ test('带回燕回身秘笈后可在镇上参悟并重返黑风寨', () => {
   for (const label of ['出发整备', '前往黑风寨', '前往山门', '前往西仓', '翻取燕回身秘笈', '前往山门', '从山门撤离', '返回青石镇']) {
     fireEvent.click(screen.getByRole('button', { name: label }));
   }
+  fireEvent.click(screen.getByRole('button', { name: '前往练功处' }));
   fireEvent.click(screen.getByRole('button', { name: /参悟燕回身/ }));
   expect(screen.getByText(/已掌握：基础剑法、燕回身/)).toBeInTheDocument();
   fireEvent.click(screen.getByRole('button', { name: '出发整备' }));

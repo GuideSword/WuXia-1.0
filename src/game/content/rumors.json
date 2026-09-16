@@ -2,5 +2,21 @@
   { "id": "western_scripture", "title": "西域经书的传闻", "source": "茶馆说书人", "credibility": 0.7, "targetLocation": "warehouse", "valueHint": "二当家或持有血刀经残页", "dangerHint": "仓库守卫经常巡行", "cost": 20, "confirmationFlag": "warehouse_script_seen", "important": true },
   { "id": "gate_shift", "title": "山门换岗", "source": "山脚樵夫", "credibility": 0.6, "targetLocation": "gate", "valueHint": "可趁巡逻空隙离寨", "dangerHint": "风声高时不可靠", "cost": 10, "confirmationFlag": "gate_shift_seen" },
   { "id": "second_chief_schedule", "title": "二当家独行时辰", "source": "西仓记录", "credibility": 0.9, "targetLocation": "second_chief_room", "valueHint": "可单独面对二当家", "dangerHint": "出刀凶猛", "cost": 0, "confirmationFlag": "second_chief_schedule" },
-  { "id": "heir_location", "title": "血刀门传人位置", "source": "寨主密信", "credibility": 0.95, "targetLocation": "chief_secret", "valueHint": "后续追查的方向", "dangerHint": "寨主或已回山", "cost": 0, "confirmationFlag": "chief_secret_searched", "important": true }
+  { "id": "heir_location", "title": "血刀门传人位置", "source": "寨主密信", "credibility": 0.95, "targetLocation": "chief_secret", "valueHint": "后续追查的方向", "dangerHint": "寨主或已回山", "cost": 0, "confirmationFlag": "chief_secret_searched", "important": true },
+  { "id": "west_warehouse", "title": "西仓私货", "source": "茶馆酒客", "credibility": 0.75, "targetLocation": "warehouse", "valueHint": "仓内存有官银", "dangerHint": "守卫轮巡", "cost": 8 },
+  { "id": "chief_return", "title": "寨主归期", "source": "往来信使", "credibility": 0.45, "targetLocation": "chief_secret", "valueHint": "估算潜入时机", "dangerHint": "归期可能提前", "cost": 12 },
+  { "id": "tunnel_entrance", "title": "后山密道", "source": "逃出的脚夫", "credibility": 0.7, "targetLocation": "back_hill", "valueHint": "可绕过山门", "dangerHint": "入口被石藤遮蔽", "cost": 18 },
+  { "id": "water_channel", "title": "水道暗流", "source": "渔夫", "credibility": 0.8, "targetLocation": "waterway", "valueHint": "可能通到山外", "dangerHint": "水深且流急", "cost": 10 },
+  { "id": "cliff_path", "title": "断崖旧路", "source": "采药人", "credibility": 0.65, "targetLocation": "back_hill", "valueHint": "可用轻功逃脱", "dangerHint": "负重难行", "cost": 10 },
+  { "id": "caravan_departure", "title": "商队离寨时辰", "source": "脚夫", "credibility": 0.72, "targetLocation": "foothill", "valueHint": "蒙面付费可混行", "dangerHint": "风声高时会盘问", "cost": 8 },
+  { "id": "prisoner_name", "title": "暗牢囚犯姓名", "source": "镇上故人", "credibility": 0.6, "targetLocation": "prisoner_cell", "valueHint": "结识被囚侠士", "dangerHint": "牢门有锁", "cost": 10 },
+  { "id": "guard_bribe", "title": "守卫受贿", "source": "黑市掮客", "credibility": 0.4, "targetLocation": "gate", "valueHint": "盘查或可化解", "dangerHint": "钱可能白花", "cost": 15 },
+  { "id": "hidden_cell", "title": "暗牢位置", "source": "旧寨图", "credibility": 0.7, "targetLocation": "prisoner_cell", "valueHint": "找到密道知情人", "dangerHint": "仓门外有人", "cost": 12 },
+  { "id": "roof_beam", "title": "西仓屋梁", "source": "修梁木匠", "credibility": 0.55, "targetLocation": "warehouse", "valueHint": "轻功可避人耳目", "dangerHint": "旧木易断", "cost": 8 },
+  { "id": "alarm_bell", "title": "寨中警铃", "source": "退役喽啰", "credibility": 0.85, "targetLocation": "gate", "valueHint": "可引开守卫", "dangerHint": "风声骤增", "cost": 8 },
+  { "id": "medicine_cache", "title": "暗藏药箱", "source": "药铺郎中", "credibility": 0.6, "targetLocation": "warehouse", "valueHint": "可能有金疮药", "dangerHint": "未必还在", "cost": 8 },
+  { "id": "smuggler_mark", "title": "私货记号", "source": "走货商人", "credibility": 0.5, "targetLocation": "warehouse", "valueHint": "辨认官银包", "dangerHint": "守卫也认得", "cost": 9 },
+  { "id": "blood_script_origin", "title": "血刀经来历", "source": "说书人", "credibility": 0.35, "targetLocation": "second_chief_room", "valueHint": "残页真伪线索", "dangerHint": "可能是编造", "cost": 15 },
+  { "id": "chief_secret", "title": "寨主密室入口", "source": "被逐工匠", "credibility": 0.55, "targetLocation": "chief_secret", "valueHint": "暗门后有密信", "dangerHint": "寨主可能折返", "cost": 16 },
+  { "id": "false_scroll", "title": "假卷藏宝", "source": "流浪游商", "credibility": 0.15, "targetLocation": "warehouse", "valueHint": "据称藏有绝世秘籍", "dangerHint": "消息很可能是陷阱", "cost": 5 }
 ]

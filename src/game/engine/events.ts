@@ -64,7 +64,11 @@ function applyEffect(state: GameState, effect: Effect, content: Content): GameSt
     }
     case 'addHeat': return { ...state, run: { ...run, heat: addHeat(run.heat, Number(effect.value)) } };
     case 'addRumor': return { ...state, run: { ...run, pendingRumors: [...new Set([...run.pendingRumors, id])] } };
-    case 'addItem': return { ...state, run: { ...run, inventory: { ...run.inventory, [id]: (run.inventory[id] ?? 0) + count } } };
+    case 'addItem': {
+      const nextRun = { ...run, inventory: { ...run.inventory, [id]: (run.inventory[id] ?? 0) + count } };
+      if (runWeight(nextRun, content) > 30) throw new Error('负重已达上限');
+      return { ...state, run: nextRun };
+    }
     case 'takeItem': {
       if ((run.inventory[id] ?? 0) < count) throw new Error(`物品不足：${id}`);
       return { ...state, run: { ...run, inventory: { ...run.inventory, [id]: run.inventory[id] - count } } };

@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { loadBundledContent } from './game/content/load';
-import { returnToTown, startRun } from './game/engine/lifecycle';
+import { moveTo, returnToTown, startRun } from './game/engine/lifecycle';
 import { chooseEvent, getChoices, getSceneText } from './game/engine/events';
 import { runWeight } from './game/engine/inventory';
 import { resolveTurn } from './game/engine/combat';
@@ -15,6 +15,7 @@ import { CombatScreen } from './ui/CombatScreen';
 import { learnArt } from './game/engine/martial';
 import { hearRumor } from './game/engine/rumors';
 import { RumorScreen } from './ui/RumorScreen';
+import { buyItem } from './game/engine/shop';
 
 export default function App() {
   const content = useMemo(loadBundledContent, []);
@@ -50,7 +51,8 @@ export default function App() {
   }
 
   if (game.phase === 'rumors') {
-    return <RumorScreen rumors={content.rumors} heard={game.permanent.heardRumors} confirmed={game.permanent.confirmedRumors} selected={game.selectedRumorId} coins={game.permanent.coins} onHear={(id) => commit(hearRumor(game, id, content))} onTrack={(id) => commit({ ...game, selectedRumorId: id, phase: 'prep' })} onBack={() => commit({ ...game, phase: 'town' })} />;
+    const offered = content.npcs.find((npc) => npc.id === 'storyteller')?.rumorsOffered ?? [];
+    return <RumorScreen rumors={content.rumors.filter((rumor) => offered.includes(rumor.id) || game.permanent.confirmedRumors.includes(rumor.id))} heard={game.permanent.heardRumors} confirmed={game.permanent.confirmedRumors} selected={game.selectedRumorId} coins={game.permanent.coins} onHear={(id) => commit(hearRumor(game, id, content))} onTrack={(id) => commit({ ...game, selectedRumorId: id, phase: 'prep' })} onBack={() => commit({ ...game, phase: 'town' })} />;
   }
 
   if (game.phase === 'explore' && game.run) {
@@ -79,5 +81,7 @@ export default function App() {
 
   if (game.phase === 'result' && game.lastResult) return <ResultScreen result={game.lastResult} onReturn={() => commit(returnToTown(game))} />;
 
-  return <><TownScreen permanent={game.permanent} arts={content.arts} onLearn={(artId) => commit(learnArt(game, artId))} onRumors={() => commit({ ...game, phase: 'rumors' })} onPrep={() => commit({ ...game, phase: 'prep' })} />{notice && <div className="floating-notice" role="status">{notice}</div>}</>;
+  const location = content.locations.find((entry) => entry.id === game.safeLocationId) ?? content.locations[0];
+  const nextLocations = location.next.map((id) => content.locations.find((entry) => entry.id === id)).filter((entry): entry is NonNullable<typeof entry> => !!entry);
+  return <><TownScreen permanent={game.permanent} arts={content.arts} location={location} nextLocations={nextLocations} npcs={content.npcs} items={content.items} onVisit={(id) => commit(moveTo(game, id, content))} onBuy={(npcId, itemId) => commit(buyItem(game, npcId, itemId, content))} onLearn={(artId) => commit(learnArt(game, artId))} onRumors={() => commit({ ...game, safeLocationId: 'teahouse', phase: 'rumors' })} onPrep={() => commit({ ...game, phase: 'prep' })} />{notice && <div className="floating-notice" role="status">{notice}</div>}</>;
 }

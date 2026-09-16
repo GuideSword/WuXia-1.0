@@ -27,9 +27,12 @@
   {
     "id": "chief_secret_search",
     "locationId": "chief_secret",
+    "npcId": "chief",
     "text": "密信写着传人的踪迹。继续翻找势必惊动全寨。",
     "choices": [
-      { "id": "find_heir_location", "label": "搜出血刀门传人位置", "conditions": [{ "type": "flagAbsent", "value": "chief_secret_searched" }], "effects": [{ "type": "setFlag", "value": "chief_secret_searched" }, { "type": "addRumor", "value": "heir_location" }, { "type": "confirmRumor", "value": "heir_location" }, { "type": "addHeat", "value": 45 }], "riskHint": "永久确认重要线索；风声 +45" }
+      { "id": "find_heir_location", "label": "搜出血刀门传人位置", "conditions": [{ "type": "flagAbsent", "value": "chief_secret_searched" }], "effects": [{ "type": "setFlag", "value": "chief_secret_searched" }, { "type": "addRumor", "value": "heir_location" }, { "type": "confirmRumor", "value": "heir_location" }, { "type": "addHeat", "value": 45 }], "riskHint": "永久确认重要线索；风声 +45" },
+      { "id": "take_taiji_manual", "label": "借风灯翻出太极剑谱", "conditions": [{ "type": "hasItem", "value": "lantern" }, { "type": "flagAbsent", "value": "taiji_manual_taken" }], "effects": [{ "type": "addLoot", "value": "taiji_manual" }, { "type": "setFlag", "value": "taiji_manual_taken" }], "riskHint": "负重 +1" },
+      { "id": "confront_chief", "label": "迎战归寨的寨主", "conditions": [{ "type": "heatAtLeast", "value": "75" }, { "type": "flagAbsent", "value": "chief_defeated" }], "effects": [{ "type": "startBattle", "value": "chief" }], "riskHint": "对手气血 55，亦可先撤" }
     ]
   },
   {
@@ -64,12 +67,25 @@
         "conditions": [{ "type": "flagAbsent", "value": "patrol_fought" }],
         "effects": [{ "type": "setFlag", "value": "patrol_fought" }, { "type": "addHeat", "value": 25 }],
         "riskHint": "风声 +25"
+      },
+      {
+        "id": "throw_knife_at_patrol",
+        "label": "掷飞刀扰乱巡逻",
+        "conditions": [{ "type": "hasItem", "value": "throwing_knife" }, { "type": "flagAbsent", "value": "patrol_distracted" }],
+        "effects": [{ "type": "takeItem", "value": "throwing_knife" }, { "type": "setFlag", "value": "patrol_distracted" }, { "type": "addHeat", "value": 5 }],
+        "riskHint": "消耗飞刀，风声 +5"
       }
+    ]
+  },
+  {
+    "id": "caravan_meeting", "locationId": "foothill", "npcId": "caravan_master", "text": "商队领队催着车马，不愿久留。", "choices": [
+      { "id": "ask_caravan", "label": "询问商队时辰", "conditions": [{ "type": "flagAbsent", "value": "caravan_asked" }], "effects": [{ "type": "addRumor", "value": "caravan_departure" }, { "type": "setFlag", "value": "caravan_asked" }], "riskHint": "得到本局商队消息" }
     ]
   },
   {
     "id": "warehouse_search",
     "locationId": "warehouse",
+    "npcId": "warehouse_guard",
     "text": "仓内无灯，布下似乎压着一只沉重的银包。门外的脚步声越来越近。",
     "choices": [
       {
@@ -106,12 +122,31 @@
         "conditions": [{ "type": "hasRumor", "value": "western_scripture" }, { "type": "flagAbsent", "value": "second_chief_schedule" }],
         "effects": [{ "type": "setFlag", "value": "second_chief_schedule" }, { "type": "addRumor", "value": "second_chief_schedule" }],
         "riskHint": "解锁单独迎战二当家的机会"
+      },
+      {
+        "id": "search_medicine_cache",
+        "label": "翻找暗藏药箱",
+        "conditions": [{ "type": "hasRumor", "value": "medicine_cache" }, { "type": "flagAbsent", "value": "medicine_cache_looted" }],
+        "effects": [{ "type": "addItem", "value": "medicine" }, { "type": "setFlag", "value": "medicine_cache_looted" }, { "type": "addHeat", "value": 6 }],
+        "riskHint": "金疮药 +1，风声 +6"
       }
+    ]
+  },
+  {
+    "id": "prisoner_rescue", "locationId": "prisoner_cell", "npcId": "prisoner", "text": "囚犯轻声说出一条绕开山门的旧路。", "choices": [
+      { "id": "help_prisoner", "label": "解开囚犯绳结", "conditions": [{ "type": "flagAbsent", "value": "prisoner_helped" }], "effects": [{ "type": "setFlag", "value": "prisoner_helped" }, { "type": "addRelation", "value": "prisoner", "amount": 1 }, { "type": "addLoot", "value": "tunnel_map" }, { "type": "addHeat", "value": 12 }], "riskHint": "获得密道图与盟友，风声 +12" },
+      { "id": "take_acupoint_manual", "label": "拾取点穴手谱", "conditions": [{ "type": "flagAbsent", "value": "acupoint_manual_taken" }], "effects": [{ "type": "addLoot", "value": "acupoint_manual" }, { "type": "setFlag", "value": "acupoint_manual_taken" }], "riskHint": "负重 +1" }
+    ]
+  },
+  {
+    "id": "back_hill_paths", "locationId": "back_hill", "text": "崖边的老树根还算牢靠。", "choices": [
+      { "id": "anchor_rope", "label": "用麻绳固定崖边", "conditions": [{ "type": "hasItem", "value": "rope" }, { "type": "flagAbsent", "value": "rope_anchored" }], "effects": [{ "type": "setFlag", "value": "rope_anchored" }, { "type": "addHeat", "value": -8 }], "riskHint": "保留麻绳，风声 -8" }
     ]
   },
   {
     "id": "gate_patrol",
     "locationId": "gate",
+    "npcId": "gate_guard",
     "text": "山门的火把照过每张面孔。风声越紧，守卫越不肯放行。",
     "choices": [
       {
@@ -127,6 +162,13 @@
         "conditions": [{ "type": "heatAtLeast", "value": "50" }, { "type": "flagAbsent", "value": "gate_cleared" }],
         "effects": [{ "type": "setFlag", "value": "gate_cleared" }, { "type": "addHeat", "value": 8 }],
         "riskHint": "放行后风声 +8；封寨时仍不可离开"
+      },
+      {
+        "id": "smoke_through_gate",
+        "label": "投烟弹趁乱穿过山门",
+        "conditions": [{ "type": "hasItem", "value": "smoke_bomb" }, { "type": "heatAtLeast", "value": "50" }, { "type": "flagAbsent", "value": "gate_cleared" }],
+        "effects": [{ "type": "takeItem", "value": "smoke_bomb" }, { "type": "setFlag", "value": "gate_cleared" }],
+        "riskHint": "消耗烟弹，不额外增加风声"
       }
     ]
   }
