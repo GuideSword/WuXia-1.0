@@ -77,6 +77,7 @@ export function moveTo(state: GameState, destinationId: Id, content: Content): G
   if (!current || !destination || !current.next.includes(destinationId) || current.kind !== destination.kind) {
     throw new Error(`从${current?.name ?? currentId}不可到达${destination?.name ?? destinationId}`);
   }
+  if (destination.requiresFlag && !state.run?.flags.includes(destination.requiresFlag)) throw new Error('尚未解开此处入口');
   if (state.run) {
     if (state.phase !== 'explore') throw new Error('战斗中不可移动');
     return { ...state, run: { ...state.run, locationId: destinationId }, notice: destination.description };

@@ -25,6 +25,10 @@ h2 { font-size: 21px; font-weight: 400; }
 .town-row small { color: #8d897c; font-size: 10px; text-align: right; }
 .town-art { display: flex; justify-content: space-between; align-items: center; gap: 8px; width: 100%; color: #e0d1b3; background: #24261e; border: 1px solid #665a43; padding: 7px 10px; margin: 6px 0; text-align: left; }
 .town-art small { color: #ab9b7d; font-size: 10px; }
+.rumor-card { border: 1px solid #62543f; background: #22241d; padding: 12px; margin: 12px 0; }
+.rumor-card h2 { margin: 0 0 8px; }
+.rumor-card p { color: #c9baa1; font-size: 12px; line-height: 1.55; }
+.rumor-card button { color: #e9dac0; background: #713126; border: 1px solid #a45440; padding: 7px 12px; }
 .loadout-row { display: flex; justify-content: space-between; align-items: center; margin: 12px 0; font-size: 13px; }
 .loadout-row input { width: 58px; min-height: 44px; color: #eee0c8; background: #101411; border: 1px solid #6a5e49; text-align: center; }
 .bottom-action { position: absolute; z-index: 3; bottom: 0; left: 0; right: 0; padding: 16px 23px calc(17px + env(safe-area-inset-bottom)); background: linear-gradient(transparent, #111512 18%); }

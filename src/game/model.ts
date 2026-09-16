@@ -60,6 +60,7 @@ export interface Location {
   next: Id[];
   kind: 'safe' | 'danger';
   description: string;
+  requiresFlag?: Id;
 }
 
 export interface ItemDefinition {

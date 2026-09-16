@@ -3,7 +3,8 @@
   { "id": "foothill", "name": "黑风寨山脚", "kind": "danger", "next": ["gate"], "description": "山风从松林里穿过，寨门的火把在夜色里忽明忽暗。" },
   { "id": "gate", "name": "黑风寨山门", "kind": "danger", "next": ["foothill", "warehouse", "back_hill"], "description": "两名守卫倚着门柱，山道从这里折入寨中。" },
   { "id": "warehouse", "name": "西仓", "kind": "danger", "next": ["gate", "second_chief_room", "waterway"], "description": "仓门半掩，木箱上落着一层薄灰。外面有人巡行。" },
-  { "id": "second_chief_room", "name": "二当家偏房", "kind": "danger", "next": ["warehouse"], "description": "偏房内酒气未散，刀架旁坐着寨中二当家。" },
+  { "id": "second_chief_room", "name": "二当家偏房", "kind": "danger", "next": ["warehouse", "chief_secret"], "description": "偏房内酒气未散，刀架旁坐着寨中二当家。" },
+  { "id": "chief_secret", "name": "寨主密室", "kind": "danger", "next": ["second_chief_room"], "requiresFlag": "blood_page_taken", "description": "暗门后有未燃尽的书信。门外已经传来急促脚步。" },
   { "id": "back_hill", "name": "后山", "kind": "danger", "next": ["gate"], "description": "陡崖与旧密道都藏在山后，夜里只闻风声。" },
   { "id": "waterway", "name": "暗水道", "kind": "danger", "next": ["warehouse"], "description": "水流没过腰际，石壁向山外渐渐收窄。" }
 ]

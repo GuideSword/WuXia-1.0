@@ -8,10 +8,28 @@
       {
         "id": "challenge_second_chief",
         "label": "迎战二当家",
-        "conditions": [{ "type": "flagAbsent", "value": "second_chief_defeated" }],
+        "conditions": [{ "type": "flagAbsent", "value": "second_chief_defeated" }, { "type": "hasFlag", "value": "second_chief_schedule" }],
         "effects": [{ "type": "startBattle", "value": "second_chief" }],
         "riskHint": "对手气血 36；可撤退"
       }
+    ]
+  },
+  {
+    "id": "second_chief_reward",
+    "locationId": "second_chief_room",
+    "text": "二当家倒下，刀架后露出一角染血纸页。暗门里似乎还有未查的密信。",
+    "choices": [
+      { "id": "take_blood_page", "label": "取走血刀经残页", "conditions": [{ "type": "hasFlag", "value": "second_chief_defeated" }, { "type": "flagAbsent", "value": "blood_page_taken" }], "effects": [{ "type": "addLoot", "value": "blood_blade_page", "amount": 1 }, { "type": "setFlag", "value": "blood_page_taken" }, { "type": "addHeat", "value": 30 }], "riskHint": "主目标到手；负重 +1，风声 +30" },
+      { "id": "leave_with_page", "label": "就此收手，返回西仓", "conditions": [{ "type": "hasFlag", "value": "blood_page_taken" }], "effects": [{ "type": "move", "value": "warehouse" }], "riskHint": "寻找可用出口" },
+      { "id": "enter_chief_secret", "label": "继续追查寨主密室", "conditions": [{ "type": "hasFlag", "value": "blood_page_taken" }], "effects": [{ "type": "move", "value": "chief_secret" }], "riskHint": "可能触发高度警戒" }
+    ]
+  },
+  {
+    "id": "chief_secret_search",
+    "locationId": "chief_secret",
+    "text": "密信写着传人的踪迹。继续翻找势必惊动全寨。",
+    "choices": [
+      { "id": "find_heir_location", "label": "搜出血刀门传人位置", "conditions": [{ "type": "flagAbsent", "value": "chief_secret_searched" }], "effects": [{ "type": "setFlag", "value": "chief_secret_searched" }, { "type": "addRumor", "value": "heir_location" }, { "type": "confirmRumor", "value": "heir_location" }, { "type": "addHeat", "value": 45 }], "riskHint": "永久确认重要线索；风声 +45" }
     ]
   },
   {
@@ -74,6 +92,20 @@
         "conditions": [{ "type": "flagAbsent", "value": "breath_manual_taken" }],
         "effects": [{ "type": "addLoot", "value": "breath_manual", "amount": 1 }, { "type": "setFlag", "value": "breath_manual_taken" }, { "type": "addHeat", "value": 8 }],
         "riskHint": "负重 +1，风声 +8；撤离后可参悟"
+      },
+      {
+        "id": "inspect_script_mark",
+        "label": "辨认西域经书印记",
+        "conditions": [{ "type": "hasRumor", "value": "western_scripture" }, { "type": "flagAbsent", "value": "warehouse_script_seen" }],
+        "effects": [{ "type": "setFlag", "value": "warehouse_script_seen" }, { "type": "confirmRumor", "value": "western_scripture" }],
+        "riskHint": "确认经书传闻；重要情报永久保留"
+      },
+      {
+        "id": "observe_chief_schedule",
+        "label": "抄录二当家独行时辰",
+        "conditions": [{ "type": "hasRumor", "value": "western_scripture" }, { "type": "flagAbsent", "value": "second_chief_schedule" }],
+        "effects": [{ "type": "setFlag", "value": "second_chief_schedule" }, { "type": "addRumor", "value": "second_chief_schedule" }],
+        "riskHint": "解锁单独迎战二当家的机会"
       }
     ]
   },

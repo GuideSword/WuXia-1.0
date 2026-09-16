@@ -8,6 +8,7 @@ export const locationSchema = z.object({
   next: z.array(id),
   kind: z.enum(['safe', 'danger']),
   description: z.string().min(1),
+  requiresFlag: id.optional(),
 });
 
 export const itemSchema = z.object({

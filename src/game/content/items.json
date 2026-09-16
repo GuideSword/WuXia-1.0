@@ -5,5 +5,6 @@
   { "id": "wild_manual", "name": "狂风刀谱", "weight": 1, "kind": "manual" },
   { "id": "taiji_manual", "name": "太极剑谱", "weight": 1, "kind": "manual" },
   { "id": "acupoint_manual", "name": "点穴手谱", "weight": 1, "kind": "manual" },
-  { "id": "mask", "name": "蒙面巾", "weight": 1, "kind": "equipment", "buyPrice": 30, "description": "商队混行时可遮掩面容。" }
+  { "id": "mask", "name": "蒙面巾", "weight": 1, "kind": "equipment", "buyPrice": 30, "description": "商队混行时可遮掩面容。" },
+  { "id": "blood_blade_page", "name": "血刀经残页", "weight": 1, "kind": "quest", "description": "血刀门残篇，首版主线目标。" }
 ]

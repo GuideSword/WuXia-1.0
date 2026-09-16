@@ -1,1 +1,6 @@
-[]
+[
+  { "id": "western_scripture", "title": "西域经书的传闻", "source": "茶馆说书人", "credibility": 0.7, "targetLocation": "warehouse", "valueHint": "二当家或持有血刀经残页", "dangerHint": "仓库守卫经常巡行", "cost": 20, "confirmationFlag": "warehouse_script_seen", "important": true },
+  { "id": "gate_shift", "title": "山门换岗", "source": "山脚樵夫", "credibility": 0.6, "targetLocation": "gate", "valueHint": "可趁巡逻空隙离寨", "dangerHint": "风声高时不可靠", "cost": 10, "confirmationFlag": "gate_shift_seen" },
+  { "id": "second_chief_schedule", "title": "二当家独行时辰", "source": "西仓记录", "credibility": 0.9, "targetLocation": "second_chief_room", "valueHint": "可单独面对二当家", "dangerHint": "出刀凶猛", "cost": 0, "confirmationFlag": "second_chief_schedule" },
+  { "id": "heir_location", "title": "血刀门传人位置", "source": "寨主密信", "credibility": 0.95, "targetLocation": "chief_secret", "valueHint": "后续追查的方向", "dangerHint": "寨主或已回山", "cost": 0, "confirmationFlag": "chief_secret_searched", "important": true }
+]

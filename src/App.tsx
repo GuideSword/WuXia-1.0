@@ -13,6 +13,8 @@ import { ResultScreen } from './ui/ResultScreen';
 import { TownScreen } from './ui/TownScreen';
 import { CombatScreen } from './ui/CombatScreen';
 import { learnArt } from './game/engine/martial';
+import { hearRumor } from './game/engine/rumors';
+import { RumorScreen } from './ui/RumorScreen';
 
 export default function App() {
   const content = useMemo(loadBundledContent, []);
@@ -47,6 +49,10 @@ export default function App() {
     return <><PrepScreen permanent={game.permanent} items={content.items} onBack={() => commit({ ...game, phase: 'town' })} onStart={(coins, loadout) => commit(startRun(game, loadout, coins, Date.now(), content))} />{notice && <div className="floating-notice" role="status">{notice}</div>}</>;
   }
 
+  if (game.phase === 'rumors') {
+    return <RumorScreen rumors={content.rumors} heard={game.permanent.heardRumors} confirmed={game.permanent.confirmedRumors} selected={game.selectedRumorId} coins={game.permanent.coins} onHear={(id) => commit(hearRumor(game, id, content))} onTrack={(id) => commit({ ...game, selectedRumorId: id, phase: 'prep' })} onBack={() => commit({ ...game, phase: 'town' })} />;
+  }
+
   if (game.phase === 'explore' && game.run) {
     const run = game.run;
     const location = content.locations.find((entry) => entry.id === run.locationId);
@@ -73,5 +79,5 @@ export default function App() {
 
   if (game.phase === 'result' && game.lastResult) return <ResultScreen result={game.lastResult} onReturn={() => commit(returnToTown(game))} />;
 
-  return <><TownScreen permanent={game.permanent} arts={content.arts} onLearn={(artId) => commit(learnArt(game, artId))} onPrep={() => commit({ ...game, phase: 'prep' })} />{notice && <div className="floating-notice" role="status">{notice}</div>}</>;
+  return <><TownScreen permanent={game.permanent} arts={content.arts} onLearn={(artId) => commit(learnArt(game, artId))} onRumors={() => commit({ ...game, phase: 'rumors' })} onPrep={() => commit({ ...game, phase: 'prep' })} />{notice && <div className="floating-notice" role="status">{notice}</div>}</>;
 }

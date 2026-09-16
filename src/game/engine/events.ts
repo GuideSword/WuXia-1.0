@@ -2,6 +2,7 @@ import type { Condition, Content, Effect, EventChoice, GameState, RunState } fro
 import { moveTo } from './lifecycle';
 import { addHeat, heatLabels, heatStage } from './heat';
 import { runWeight } from './inventory';
+import { confirmRumor } from './rumors';
 
 function hasItem(run: RunState, id: string): boolean {
   return (run.inventory[id] ?? 0) + (run.loot[id] ?? 0) > 0;
@@ -24,7 +25,10 @@ function conditionMet(condition: Condition, state: GameState, content: Content):
 
 function movementChoices(state: GameState, content: Content): EventChoice[] {
   const location = content.locations.find((entry) => entry.id === state.run?.locationId);
-  return (location?.next ?? []).map((id) => {
+  return (location?.next ?? []).filter((id) => {
+    const target = content.locations.find((entry) => entry.id === id);
+    return !target?.requiresFlag || !!state.run?.flags.includes(target.requiresFlag);
+  }).map((id) => {
     const target = content.locations.find((entry) => entry.id === id);
     return { id: `go:${id}`, label: `前往${target?.name.replace('黑风寨', '') ?? id}`, conditions: [], effects: [{ type: 'move', value: id }], riskHint: '转移地点' };
   });
@@ -68,7 +72,7 @@ function applyEffect(state: GameState, effect: Effect, content: Content): GameSt
     case 'addCoins': return { ...state, run: { ...run, coins: Math.max(0, run.coins + Number(effect.value)) } };
     case 'heal': return { ...state, run: { ...run, hp: Math.min(100, run.hp + Number(effect.value)) } };
     case 'addRelation': return { ...state, permanent: { ...state.permanent, relations: { ...state.permanent.relations, [id]: (state.permanent.relations[id] ?? 0) + count } } };
-    case 'confirmRumor': return { ...state, permanent: { ...state.permanent, confirmedRumors: [...new Set([...state.permanent.confirmedRumors, id])] } };
+    case 'confirmRumor': return confirmRumor(state, id, content);
     case 'startBattle': {
       const npc = content.npcs.find((entry) => entry.id === id);
       if (!npc?.hp) throw new Error(`战斗角色不存在：${id}`);
