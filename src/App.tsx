@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { loadBundledContent } from './game/content/load';
-import { moveTo, returnToTown, startRun } from './game/engine/lifecycle';
+import { failRun, moveTo, returnToTown, startRun } from './game/engine/lifecycle';
 import { chooseEvent, getChoices, getSceneText } from './game/engine/events';
 import { runWeight } from './game/engine/inventory';
 import { resolveTurn } from './game/engine/combat';
@@ -75,7 +75,10 @@ export default function App() {
         weight={runWeight(run, content)}
         choices={choices}
         exits={exits}
+        items={content.items}
+        objective={content.rumors.find((rumor) => rumor.id === game.selectedRumorId)?.title}
         onChoose={(id) => commit(id.startsWith('extract:') ? attemptExit(game, id.slice(8) as ExitId, content) : chooseEvent(game, id, content))}
+        onAbandon={() => commit(failRun(game))}
       />
     );
   }
@@ -84,7 +87,7 @@ export default function App() {
     return <CombatScreen battle={game.run.battle} hp={game.run.hp} items={game.run.inventory} availableTechniques={game.permanent.learnedArts.map((id) => ({ id, name: content.arts.find((art) => art.id === id)?.name ?? id }))} notice={game.notice} onAction={(action) => commit(resolveTurn(game, action))} />;
   }
 
-  if (game.phase === 'result' && game.lastResult) return <ResultScreen result={game.lastResult} onReturn={() => commit(returnToTown(game))} />;
+  if (game.phase === 'result' && game.lastResult) return <ResultScreen result={game.lastResult} items={content.items} onReturn={() => commit(returnToTown(game))} />;
 
   const location = content.locations.find((entry) => entry.id === game.safeLocationId) ?? content.locations[0];
   const nextLocations = location.next.map((id) => content.locations.find((entry) => entry.id === id)).filter((entry): entry is NonNullable<typeof entry> => !!entry);

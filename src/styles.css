@@ -11,7 +11,7 @@ h1, h2, .primary-button, .choice-button { font-family: STKaiti, KaiTi, "Microsof
 h1 { margin: 0; font-size: 35px; font-weight: 400; letter-spacing: .1em; }
 h2 { font-size: 21px; font-weight: 400; }
 .intro { color: #b9b2a4; line-height: 1.85; font-size: 14px; }
-.town-illustration { height: 30dvh; min-height: 210px; position: relative; display: grid; place-items: center; background: radial-gradient(circle at 70% 24%, #d3b1787a 0 2%, transparent 16%), linear-gradient(165deg, transparent 54%, #0a1311 55% 64%, transparent 65%), linear-gradient(12deg, transparent 50%, #101a17 51% 58%, transparent 59%), linear-gradient(#273936, #1e2b29 65%, #151a16); border-bottom: 1px solid #7c6b4d44; }
+.town-illustration { height: 42dvh; min-height: 260px; position: relative; display: grid; place-items: end center; padding-bottom: 32px; background: url('./assets/town-dawn.png') center 39% / cover no-repeat; border-bottom: 1px solid #7c6b4d44; }
 .town-illustration::after { content: ''; position: absolute; inset: 0; background: linear-gradient(transparent 52%, #171a16); }
 .town-illustration span { z-index: 1; font-family: STKaiti, KaiTi, serif; font-size: 32px; letter-spacing: .35em; text-shadow: 0 4px 12px #000; }
 .status-card { display: flex; justify-content: space-between; gap: 10px; border: 1px solid #665a43; padding: 16px 13px; margin: 20px 0; background: #20231c; }
@@ -48,12 +48,9 @@ h2 { font-size: 21px; font-weight: 400; }
 .field-error { color: #e27d6b; font-size: 12px; }
 .hint { color: #8e897d; font-size: 12px; line-height: 1.65; }
 .explore-page { background: #111512; }
-.explore-illustration { position: absolute; top: 0; left: 0; right: 0; height: 57dvh; overflow: hidden; background: radial-gradient(circle at 65% 17%, #e3d0a8 0 5%, #b6ad8966 7%, transparent 22%), linear-gradient(#16242a, #243430 49%, #111512); }
-.explore-illustration::after { content: ''; position: absolute; inset: 0; background: linear-gradient(transparent 18%, #11151244 52%, #111512 95%); }
-.mountain { position: absolute; width: 130%; height: 72%; left: -15%; bottom: -15%; clip-path: polygon(0 100%, 0 62%, 20% 40%, 32% 64%, 53% 21%, 72% 64%, 86% 39%, 100% 68%, 100% 100%); }
-.mountain-back { background: #1b292b; transform: translateY(-14%); }
-.mountain-front { background: #0e1b1a; transform: translateY(17%) scaleX(-1); }
-.explore-content { position: absolute; left: 0; right: 0; bottom: 0; z-index: 1; padding: 30px 23px calc(28px + env(safe-area-inset-bottom)); background: linear-gradient(transparent, #111512 17%); }
+.explore-illustration { height: 49dvh; min-height: 290px; background: url('./assets/black-wind-stronghold.png') center 28% / cover no-repeat; }
+.explore-illustration::after { content: ''; display: block; width: 100%; height: 100%; background: linear-gradient(transparent 24%, #11151266 66%, #111512 100%); }
+.explore-content { position: relative; z-index: 1; margin-top: -7dvh; padding: 16px 23px calc(35px + env(safe-area-inset-bottom)); background: linear-gradient(transparent, #111512 14%); }
 .explore-content h1 { font-size: 28px; }
 .heat-line { display: flex; gap: 8px; align-items: center; color: #c9ad86; font-size: 11px; margin-top: 16px; }
 .heat-line strong { color: #d9735e; }
@@ -63,12 +60,17 @@ h2 { font-size: 21px; font-weight: 400; }
 .scene-notice { border-left: 2px solid #c24f3d; padding-left: 10px; color: #e0b59b; font-size: 12px; line-height: 1.5; }
 .quick-stats { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
 .quick-stats span { font-size: 10px; padding: 5px 7px; border: 1px solid #6d624b; color: #c2b7a1; }
-.choice-list { display: grid; gap: 9px; max-height: 32dvh; overflow: auto; }
+.choice-list { display: grid; gap: 9px; }
 .exit-heading { margin: 12px 0 1px; color: #c0a782; font-size: 16px; }
 .choice-button { border: 1px solid #6a5c45; background: #24261e; color: #e9dec8; display: flex; justify-content: space-between; align-items: center; padding: 9px 13px; text-align: left; font-size: 18px; gap: 10px; }
 .choice-button small { color: #a79b83; font-family: system-ui, sans-serif; font-size: 10px; }
 .exit-choice { background: #713126; border-color: #b0503d; }
 .exit-choice small { color: #f0c1ab; }
+.objective-line { color: #cfb383; font-size: 12px; border-top: 1px solid #6d624b; padding-top: 9px; }
+.route-drawer { border-top: 1px solid #5e5544; margin-top: 15px; padding-top: 9px; }
+.route-drawer summary { min-height: 44px; color: #c9ae83; cursor: pointer; font-size: 13px; }
+.route-drawer .choice-list { margin-bottom: 14px; }
+.abandon-button { color: #b69d91; background: transparent; border: 1px solid #71544c; padding: 6px 10px; }
 .result-page { padding-top: 25dvh; }
 .combat-page { padding-top: 18dvh; background: radial-gradient(circle at 75% 5%, #803a2b55, transparent 45%), #171a16; }
 .combat-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 25px; }
