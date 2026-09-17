@@ -38,7 +38,7 @@ h2 { font-size: 21px; font-weight: 400; }
 .error-page { padding-top: 12dvh; }
 .loadout-row { display: flex; justify-content: space-between; align-items: center; margin: 12px 0; font-size: 13px; }
 .loadout-row input { width: 58px; min-height: 44px; color: #eee0c8; background: #101411; border: 1px solid #6a5e49; text-align: center; }
-.bottom-action { position: absolute; z-index: 3; bottom: 0; left: 0; right: 0; padding: 16px 23px calc(17px + env(safe-area-inset-bottom)); background: linear-gradient(transparent, #111512 18%); }
+.bottom-action { position: fixed; z-index: 3; bottom: 0; left: 50%; width: min(100%, 430px); transform: translateX(-50%); padding: 16px 23px calc(17px + env(safe-area-inset-bottom)); background: linear-gradient(transparent, #111512 18%); }
 .primary-button { width: 100%; min-height: 52px; color: #fff0d8; background: #963e30; border: 1px solid #c3634e; font-size: 20px; letter-spacing: .18em; }
 .primary-button:hover:not(:disabled) { background: #aa4b3a; }
 .text-button { border: 0; background: none; color: #b6a888; padding: 0 0 25px; }

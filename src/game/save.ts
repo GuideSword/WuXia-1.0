@@ -73,6 +73,10 @@ export function parseImport(text: string): GameState {
       return GAME.parse({ ...legacy, permanent: { ...createGame().permanent, ...legacy.permanent } });
     })();
     if (!game.permanent.learnedArts.includes('basic_sword')) game.permanent.learnedArts.unshift('basic_sword');
+    if (['explore', 'combat'].includes(game.phase) !== !!game.run) throw new Error('存档阶段与本局状态不一致');
+    if (game.phase === 'combat' && !game.run?.battle) throw new Error('战斗阶段缺少敌方状态');
+    if (game.phase === 'explore' && game.run?.battle) throw new Error('探索阶段存在未结束战斗');
+    if (game.phase === 'result' && !game.lastResult) throw new Error('结算阶段缺少结果');
     return game;
   } catch (error) {
     throw new Error(`存档校验失败：${error instanceof Error ? error.message : '未知错误'}`);

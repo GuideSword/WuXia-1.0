@@ -54,3 +54,8 @@ test('双份损坏后新开局会重建可恢复备份', () => {
   localStorage.setItem('wuxia.current', '{broken-again');
   expect(loadGame(localStorage).permanent.coins).toBe(500);
 });
+
+test('拒绝页面阶段与本局状态不一致的导入', () => {
+  const invalid = { ...createGame(), phase: 'combat', run: null };
+  expect(() => parseImport(JSON.stringify({ schemaVersion: 1, game: invalid }))).toThrow(/阶段/);
+});
