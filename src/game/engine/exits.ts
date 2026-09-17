@@ -17,6 +17,7 @@ export interface ExitContext {
   hasTunnelMap: boolean;
   ally: boolean;
   gateCleared?: boolean;
+  knownStyle?: boolean;
 }
 export interface ExitEvaluation { status: ExitStatus; reason: string; costCoins: number; droppedItemIds: string[] }
 
@@ -29,7 +30,8 @@ export function evaluateExit(id: ExitId, c: ExitContext): ExitEvaluation {
   if (id === 'gate') {
     if (c.locationId !== 'gate') return closed('需先到山门');
     if (c.heat >= 100) return closed('封寨追捕中，山门已关闭');
-    if (c.heat >= 50 && !c.gateCleared) return closed('风声达到 50，须先通过山门盘查');
+    const checkAt = c.knownStyle ? 40 : 50;
+    if (c.heat >= checkAt && !c.gateCleared) return closed(`风声达到 ${checkAt}，须先通过山门盘查${c.knownStyle ? '（招式已被认出）' : ''}`);
     return open('山门可通行');
   }
   if (id === 'cliff') {
@@ -67,6 +69,7 @@ export function exitContext(state: GameState, content: Content): ExitContext {
     hasTunnelMap: !!run.inventory.tunnel_map || !!run.loot.tunnel_map || state.permanent.confirmedRumors.includes('tunnel_entrance'),
     ally: (state.permanent.relations.prisoner ?? 0) >= 1,
     gateCleared: canUseGate(run),
+    knownStyle: run.flags.includes('known_style'),
   };
 }
 
@@ -87,7 +90,7 @@ export function attemptExit(state: GameState, id: ExitId, content: Content): Gam
     const roll = rollD6(run.seed);
     run = { ...run, seed: roll.nextSeed };
     const needed = evaluation.status === 'roll4' ? 4 : 5;
-    if (roll.value < needed) return { ...state, run: { ...run, heat: addHeat(run.heat, 10) }, notice: `掷出 ${roll.value}，未达 ${needed}+。车资已付，风声 +10。` };
+    if (roll.value < needed) return { ...state, run: { ...run, heat: addHeat(run.heat, 10), log: [...(run.log ?? []), `商队掷出 ${roll.value}，未达 ${needed}+；车资 -200，风声 +10`].slice(-30) }, notice: `掷出 ${roll.value}，未达 ${needed}+。车资已付，风声 +10。` };
   }
   const dropped = id === 'waterway' ? dropHeaviestOrdinary(run, content) : { run, lost: {} };
   return settleExtraction({ ...state, run: dropped.run }, id, content, dropped.lost);

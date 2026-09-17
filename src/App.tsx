@@ -57,7 +57,7 @@ export default function App() {
 
   if (game.phase === 'rumors') {
     const offered = content.npcs.find((npc) => npc.id === 'storyteller')?.rumorsOffered ?? [];
-    return <RumorScreen rumors={content.rumors.filter((rumor) => offered.includes(rumor.id) || game.permanent.confirmedRumors.includes(rumor.id))} heard={game.permanent.heardRumors} confirmed={game.permanent.confirmedRumors} selected={game.selectedRumorId} coins={game.permanent.coins} onHear={(id) => commit(hearRumor(game, id, content))} onTrack={(id) => commit({ ...game, selectedRumorId: id, phase: 'prep' })} onBack={() => commit({ ...game, phase: 'town' })} />;
+    return <RumorScreen rumors={content.rumors.filter((rumor) => offered.includes(rumor.id) || game.permanent.confirmedRumors.includes(rumor.id))} heard={game.permanent.heardRumors} confirmed={game.permanent.confirmedRumors} selected={game.selectedRumorId} coins={game.permanent.coins} witnessedStyles={game.permanent.flags.filter((flag) => flag.startsWith('witnessed_style:')).map((flag) => content.arts.find((art) => art.id === flag.slice('witnessed_style:'.length))?.name ?? '某派')} onHear={(id) => commit(hearRumor(game, id, content))} onTrack={(id) => commit({ ...game, selectedRumorId: id, phase: 'prep' })} onBack={() => commit({ ...game, phase: 'town' })} />;
   }
 
   if (game.phase === 'explore' && game.run) {
@@ -77,6 +77,7 @@ export default function App() {
         exits={exits}
         items={content.items}
         objective={content.rumors.find((rumor) => rumor.id === game.selectedRumorId)?.title}
+        mapNext={(location?.next ?? []).map((id) => content.locations.find((entry) => entry.id === id)).filter((entry) => entry && (!entry.requiresFlag || run.flags.includes(entry.requiresFlag))).map((entry) => entry!.name)}
         onChoose={(id) => commit(id.startsWith('extract:') ? attemptExit(game, id.slice(8) as ExitId, content) : chooseEvent(game, id, content))}
         onAbandon={() => commit(failRun(game))}
       />

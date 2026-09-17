@@ -70,12 +70,14 @@ h2 { font-size: 21px; font-weight: 400; }
 .route-drawer { border-top: 1px solid #5e5544; margin-top: 15px; padding-top: 9px; }
 .route-drawer summary { min-height: 44px; color: #c9ae83; cursor: pointer; font-size: 13px; }
 .route-drawer .choice-list { margin-bottom: 14px; }
+.action-log { color: #bfb39e; font-size: 12px; line-height: 1.8; padding-left: 20px; }
 .abandon-button { color: #b69d91; background: transparent; border: 1px solid #71544c; padding: 6px 10px; }
 .result-page { padding-top: 25dvh; }
 .combat-page { padding-top: 18dvh; background: radial-gradient(circle at 75% 5%, #803a2b55, transparent 45%), #171a16; }
 .combat-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 25px; }
 .combat-actions button { min-height: 72px; color: #ecdeca; background: #29271f; border: 1px solid #7a6650; padding: 9px; text-align: left; font-family: STKaiti, KaiTi, serif; font-size: 17px; }
 .combat-actions small { display: block; margin-top: 5px; color: #b6a788; font-family: system-ui, sans-serif; font-size: 10px; }
+.art-select { width: 100%; min-height: 44px; color: #ead9ba; background: #20241e; border: 1px solid #766547; padding: 7px 10px; }
 .result-mark { position: absolute; right: 25px; top: 50px; border: 3px solid #9a4736; color: #b65844; width: 95px; height: 95px; display: grid; place-items: center; font-family: STKaiti, KaiTi, serif; font-size: 57px; transform: rotate(-12deg); opacity: .65; }
 .floating-notice { position: fixed; z-index: 10; top: 12px; left: 50%; transform: translateX(-50%); width: min(92vw, 390px); border: 1px solid #b78b61; background: #25231ce8; color: #f3dfbd; font-size: 12px; padding: 10px 12px; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; } }

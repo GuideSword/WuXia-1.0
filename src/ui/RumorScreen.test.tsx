@@ -10,3 +10,9 @@ test('低可信度传闻不会被说成已证实', () => {
   fireEvent.click(screen.getByRole('button', { name: '探听伪卷之谜' }));
   expect(onHear).toHaveBeenCalledWith('false_scroll');
 });
+
+test('被目击的流派招式以未确认传闻显示', () => {
+  render(<RumorScreen rumors={[]} heard={[]} confirmed={[]} selected={null} coins={100} witnessedStyles={['狂风刀']} onHear={vi.fn()} onTrack={vi.fn()} onBack={vi.fn()} />);
+  expect(screen.getByText(/疑似狂风刀招式/)).toBeInTheDocument();
+  expect(screen.getByText(/尚未证实/)).toBeInTheDocument();
+});

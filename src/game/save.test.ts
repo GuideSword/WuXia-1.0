@@ -24,6 +24,13 @@ test('保存后可恢复到本局稳定地点', () => {
   expect(loadGame(localStorage).run?.locationId).toBe('gate');
 });
 
+test('行动日志随本地存档恢复', () => {
+  const inRaid = createGame();
+  const started = { ...inRaid, phase: 'explore' as const, run: { locationId: 'foothill', hp: 100, heat: 0, coins: 0, inventory: {}, loot: {}, pendingRumors: [], flags: [], seed: 1, battle: null, log: ['来到山脚', '避开巡逻'] } };
+  saveGame(localStorage, started);
+  expect(loadGame(localStorage).run?.log).toEqual(['来到山脚', '避开巡逻']);
+});
+
 test('导入只解析不覆盖现有存档，确认后才提交', () => {
   saveGame(localStorage, createGame());
   const original = localStorage.getItem('wuxia.current');

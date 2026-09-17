@@ -40,3 +40,33 @@ test('没有独行线索不能直接挑战二当家', () => {
   const atRoom = { ...raid, run: { ...raid.run!, locationId: 'second_chief_room' } };
   expect(getChoices(atRoom, content).map((choice) => choice.id)).not.toContain('challenge_second_chief');
 });
+
+test('习得点穴和轻功后出现对应潜入动作', () => {
+  const content = loadBundledContent();
+  const base = createGame();
+  const atWarehouse = startRun({ ...base, permanent: { ...base.permanent, learnedArts: ['basic_sword', 'acupoint', 'swallow_step'] } }, {}, 0, 13, content);
+  const game = { ...atWarehouse, run: { ...atWarehouse.run!, locationId: 'warehouse' } };
+  const ids = getChoices(game, content).map((choice) => choice.id);
+  expect(ids).toContain('silent_subdue_guard');
+  expect(ids).toContain('climb_warehouse_beam');
+  const untrained = startRun(createGame(), {}, 0, 13, content);
+  const idsBefore = getChoices({ ...untrained, run: { ...untrained.run!, locationId: 'warehouse' } }, content).map((choice) => choice.id);
+  expect(idsBefore).not.toContain('silent_subdue_guard');
+});
+
+test('所选行动写入本局日志，可供刷新后查看', () => {
+  const content = loadBundledContent();
+  const started = startRun(createGame(), {}, 0, 4, content);
+  const acted = chooseEvent(started, 'pass_silently', content);
+  expect(acted.run?.log).toContain('静默通过巡逻');
+});
+
+test('被认出的招式会让山门提前出现盘查动作', () => {
+  const content = loadBundledContent();
+  const base = createGame();
+  const known = startRun({ ...base, permanent: { ...base.permanent, flags: ['witnessed_style:wild_blade'] } }, {}, 0, 7, content);
+  const atGate = { ...known, run: { ...known.run!, locationId: 'gate', heat: 40 } };
+  expect(getChoices(atGate, content).map((choice) => choice.id)).toContain('pass_gate_check');
+  const ordinary = startRun(createGame(), {}, 0, 7, content);
+  expect(getChoices({ ...ordinary, run: { ...ordinary.run!, locationId: 'gate', heat: 40 } }, content).map((choice) => choice.id)).not.toContain('pass_gate_check');
+});

@@ -32,6 +32,7 @@ export interface RunState {
   flags: Id[];
   seed: number;
   battle: BattleState | null;
+  log?: string[];
 }
 
 export interface ResultState {
@@ -114,7 +115,8 @@ export type ConditionType =
   | 'hasRumor'
   | 'heatAtLeast'
   | 'heatBelow'
-  | 'relationAtLeast';
+  | 'relationAtLeast'
+  | 'gateCheckRequired';
 
 export interface Condition {
   type: ConditionType;

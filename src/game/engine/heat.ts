@@ -19,5 +19,6 @@ export const heatLabels: Record<HeatStage, string> = {
 };
 
 export function canUseGate(run: RunState): boolean {
-  return run.locationId === 'gate' && (run.heat < 50 || run.flags.includes('gate_cleared')) && run.heat < 100;
+  const checkAt = run.flags.includes('known_style') ? 40 : 50;
+  return run.locationId === 'gate' && (run.heat < checkAt || run.flags.includes('gate_cleared')) && run.heat < 100;
 }

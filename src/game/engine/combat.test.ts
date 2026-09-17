@@ -34,3 +34,45 @@ test('获胜保留进度，战败丢失本局物资', () => {
   expect(loss.phase).toBe('result');
   expect(loss.lastResult?.lost.silver_ledger).toBe(1);
 });
+
+test('狂风刀更猛更招风，点穴手能封住当回合攻击', () => {
+  const state = battle();
+  state.permanent.learnedArts = ['basic_sword', 'wild_blade', 'acupoint'];
+  const basic = resolveTurn(state, { type: 'technique', artId: 'basic_sword' });
+  const wild = resolveTurn(state, { type: 'technique', artId: 'wild_blade' });
+  const point = resolveTurn(state, { type: 'technique', artId: 'acupoint' });
+  expect(wild.run!.battle!.enemyHp).toBeLessThan(basic.run!.battle!.enemyHp);
+  expect(wild.run!.heat).toBeGreaterThan(basic.run!.heat);
+  expect(point.run!.hp).toBe(state.run.hp);
+});
+
+test('显眼招式被活着的对手目击后，撤退会留下永久传闻', () => {
+  const state = battle();
+  state.permanent.learnedArts.push('wild_blade');
+  const shown = resolveTurn(state, { type: 'technique', artId: 'wild_blade' });
+  expect(shown.run?.log?.at(-1)).toMatch(/狂风刀/);
+  const escaped = resolveTurn(shown, { type: 'retreat' });
+  expect(escaped.permanent.flags).toContain('witnessed_style:wild_blade');
+  expect(escaped.run?.log?.at(-1)).toMatch(/撤退/);
+  const nextRaid = startRun({ ...escaped, phase: 'town', run: null }, {}, 0, 3);
+  expect(nextRaid.run?.flags).toContain('known_style');
+});
+
+test('击败唯一目击者不会留下流派传闻', () => {
+  const state = battle();
+  state.permanent.learnedArts.push('wild_blade');
+  state.run.battle.enemyHp = 19;
+  const shown = resolveTurn(state, { type: 'technique', artId: 'wild_blade' });
+  const won = resolveTurn(shown, { type: 'attack' });
+  expect(won.run?.flags.some((flag) => flag.startsWith('style_seen:'))).toBe(false);
+  expect(won.run?.log?.at(-1)).toMatch(/击败/);
+});
+
+test('以显眼招式结束战斗仍计算招式风声', () => {
+  const state = battle();
+  state.permanent.learnedArts.push('wild_blade');
+  state.run.battle.enemyHp = 18;
+  const won = resolveTurn(state, { type: 'technique', artId: 'wild_blade' });
+  expect(won.run?.heat).toBe(37);
+  expect(won.run?.flags.some((flag) => flag.startsWith('style_seen:'))).toBe(false);
+});

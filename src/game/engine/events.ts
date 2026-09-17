@@ -3,6 +3,7 @@ import { moveTo } from './lifecycle';
 import { addHeat, heatLabels, heatStage } from './heat';
 import { runWeight } from './inventory';
 import { confirmRumor } from './rumors';
+import { canUseGate } from './heat';
 
 function hasItem(run: RunState, id: string): boolean {
   return (run.inventory[id] ?? 0) + (run.loot[id] ?? 0) > 0;
@@ -20,6 +21,7 @@ function conditionMet(condition: Condition, state: GameState, content: Content):
     case 'heatAtLeast': return run.heat >= (condition.amount ?? Number(condition.value));
     case 'heatBelow': return run.heat < (condition.amount ?? Number(condition.value));
     case 'relationAtLeast': return (state.permanent.relations[condition.value] ?? 0) >= (condition.amount ?? 1);
+    case 'gateCheckRequired': return run.locationId === 'gate' && !canUseGate(run) && run.heat < 100;
   }
 }
 
@@ -88,7 +90,8 @@ function applyEffect(state: GameState, effect: Effect, content: Content): GameSt
 export function chooseEvent(state: GameState, choiceId: string, content: Content): GameState {
   const choice = getChoices(state, content).find((entry) => entry.id === choiceId);
   if (!choice) throw new Error(`当前选项不可用：${choiceId}`);
-  const next = choice.effects.reduce((current, effect) => applyEffect(current, effect, content), state);
+  const applied = choice.effects.reduce((current, effect) => applyEffect(current, effect, content), state);
+  const next = applied.run ? { ...applied, run: { ...applied.run, log: [...(state.run?.log ?? []), choice.label].slice(-30) } } : applied;
   const before = heatStage(state.run?.heat ?? 0);
   const after = heatStage(next.run?.heat ?? 0);
   return before === after ? next : { ...next, notice: `风声已升至「${heatLabels[after]}」。` };

@@ -6,18 +6,20 @@ interface Props {
   confirmed: string[];
   selected: string | null;
   coins: number;
+  witnessedStyles?: string[];
   onHear: (id: string) => void;
   onTrack: (id: string) => void;
   onBack: () => void;
 }
 
-export function RumorScreen({ rumors, heard, confirmed, selected, coins, onHear, onTrack, onBack }: Props) {
+export function RumorScreen({ rumors, heard, confirmed, selected, coins, witnessedStyles = [], onHear, onTrack, onBack }: Props) {
   return <main className="page rumors-page">
     <div className="page-content">
       <button className="text-button" type="button" onClick={onBack}>← 返回青石镇</button>
       <p className="eyebrow">茶馆 · 风闻</p>
       <h1>江湖传闻</h1>
       <p className="intro">听来的事未必是真。先探听，再入寨找证据。现有银两 {coins}。</p>
+      {witnessedStyles.map((name) => <p className="scene-notice" key={name}>寨中有人传出疑似{name}招式的目击消息；尚未证实。再入寨时山门盘查更严。</p>)}
       <div className="rumor-list">
         {rumors.map((rumor) => {
           const known = heard.includes(rumor.id) || confirmed.includes(rumor.id);

@@ -13,11 +13,12 @@ interface Props {
   exits: { id: ExitId; name: string; evaluation: ExitEvaluation }[];
   items?: ItemDefinition[];
   objective?: string | null;
+  mapNext?: string[];
   onChoose: (choiceId: string) => void;
   onAbandon?: () => void;
 }
 
-export function ExploreScreen({ title, description, notice, run, weight, choices, exits, items = [], objective, onChoose, onAbandon }: Props) {
+export function ExploreScreen({ title, description, notice, run, weight, choices, exits, items = [], objective, mapNext = [], onChoose, onAbandon }: Props) {
   const [confirmAbandon, setConfirmAbandon] = useState(false);
   const localExitIds: Record<string, ExitId[]> = { gate: ['gate'], foothill: ['caravan'], back_hill: ['cliff', 'tunnel'], waterway: ['waterway'] };
   const localExits = exits.filter((exit) => localExitIds[run.locationId]?.includes(exit.id));
@@ -44,6 +45,8 @@ export function ExploreScreen({ title, description, notice, run, weight, choices
           {localExits.length ? localExits.map(renderExit) : <p className="hint">此处没有出口，需继续寻找。</p>}
         </div>
         <details className="route-drawer"><summary>查看全部撤离路线</summary><div className="choice-list">{otherExits.map(renderExit)}</div></details>
+        <details className="route-drawer"><summary>地图</summary><p className="hint">当前位置：{title}</p><p className="hint">下一步可到：{mapNext.join('、') || '暂无可通行道路'}</p></details>
+        <details className="route-drawer"><summary>行动日志</summary><ol className="action-log">{(run.log ?? []).map((entry, index) => <li key={`${index}-${entry}`}>{entry}</li>)}</ol></details>
         <details className="route-drawer"><summary>行囊与局势</summary>
           <p className="hint">气血 {run.hp} · 风声 {run.heat} · 负重 {weight}/30 · 携银 {run.coins}</p>
           <p className="hint">携带：{Object.entries(run.inventory).filter(([, count]) => count > 0).map(([id, count]) => `${itemName(id)} ×${count}`).join('、') || '无'}</p>

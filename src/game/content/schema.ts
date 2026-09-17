@@ -55,7 +55,7 @@ export const rumorSchema = z.object({
 });
 
 const conditionSchema = z.object({
-  type: z.enum(['flagAbsent', 'hasFlag', 'hasItem', 'hasArtTag', 'hasRumor', 'heatAtLeast', 'heatBelow', 'relationAtLeast']),
+  type: z.enum(['flagAbsent', 'hasFlag', 'hasItem', 'hasArtTag', 'hasRumor', 'heatAtLeast', 'heatBelow', 'relationAtLeast', 'gateCheckRequired']),
   value: id,
   amount: z.number().int().optional(),
 });

@@ -61,9 +61,10 @@ export function startRun(state: GameState, loadout: Counts, carriedCoins: number
       inventory: { ...loadout },
       loot: {},
       pendingRumors: [],
-      flags: [],
+      flags: state.permanent.flags.some((flag) => flag.startsWith('witnessed_style:')) ? ['known_style'] : [],
       seed,
       battle: null,
+      log: ['来到黑风寨山脚'],
     },
     lastResult: null,
     notice: '你已来到黑风寨山脚。',
@@ -80,7 +81,7 @@ export function moveTo(state: GameState, destinationId: Id, content: Content): G
   if (destination.requiresFlag && !state.run?.flags.includes(destination.requiresFlag)) throw new Error('尚未解开此处入口');
   if (state.run) {
     if (state.phase !== 'explore') throw new Error('战斗中不可移动');
-    return { ...state, run: { ...state.run, locationId: destinationId }, notice: destination.description };
+    return { ...state, run: { ...state.run, locationId: destinationId, log: [...(state.run.log ?? []), `抵达${destination.name}`].slice(-30) }, notice: destination.description };
   }
   if (state.phase !== 'town') throw new Error('当前不可在镇内移动');
   return { ...state, safeLocationId: destinationId, notice: destination.description };
@@ -121,9 +122,11 @@ export function settleExtraction(state: GameState, routeId: Id, content?: Conten
 
 export function failRun(state: GameState): GameState {
   const run = requireRun(state);
+  const seen = run.flags.filter((flag) => flag.startsWith('style_seen:')).map((flag) => flag.replace('style_seen:', 'witnessed_style:'));
   return {
     ...state,
     phase: 'result',
+    permanent: { ...state.permanent, flags: [...new Set([...state.permanent.flags, ...seen])] },
     run: null,
     lastResult: { success: false, coins: 0, loot: {}, rumors: [], lost: addCounts(run.inventory, run.loot), route: null, message: '此行失手，本局物资已经遗失。' },
     notice: null,

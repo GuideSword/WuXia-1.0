@@ -166,7 +166,7 @@ test('商队主动投骰按本局种子结算，失败刷新也不能重掷', as
     await expect(page.getByRole('heading', { name: '撤离成功' })).toBeVisible();
     await expect(page.getByText(/从商队离开/)).toBeVisible();
   } else {
-    await expect(page.getByText(new RegExp(`掷出 ${rolled}`))).toBeVisible();
+    await expect(page.getByRole('status').getByText(new RegExp(`掷出 ${rolled}`))).toBeVisible();
     const failed = await page.evaluate(() => JSON.parse(localStorage.getItem('wuxia.current')!).game.run as { seed: number; heat: number; coins: number });
     expect(failed).toMatchObject({ seed: nextSeed, heat: 88, coins: 0 });
     await page.reload();

@@ -20,4 +20,5 @@ test('五十风声后山门必须盘查，封寨时无法直接离开', () => {
   expect(canUseGate({ ...run, locationId: 'gate', heat: 50 })).toBe(false);
   expect(canUseGate({ ...run, locationId: 'gate', heat: 58, flags: ['gate_cleared'] })).toBe(true);
   expect(canUseGate({ ...run, locationId: 'gate', heat: 100, flags: ['gate_cleared'] })).toBe(false);
+  expect(canUseGate({ ...run, locationId: 'gate', heat: 40, flags: ['known_style'] })).toBe(false);
 });

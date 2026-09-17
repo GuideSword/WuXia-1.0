@@ -31,6 +31,7 @@ const RUN = z.object({
   flags: z.array(z.string()),
   seed: z.number().int(),
   battle: BATTLE.nullable(),
+  log: z.array(z.string()).optional(),
 });
 const RESULT = z.object({
   success: z.boolean(),

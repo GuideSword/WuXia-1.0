@@ -15,6 +15,7 @@ test('五条路线均有位置或能力条件及可读原因', () => {
   expect(evaluateExit('waterway', { ...context, locationId: 'waterway', tags: ['breath'] }).status).toBe('open');
   expect(evaluateExit('tunnel', { ...context, locationId: 'back_hill', ally: true }).status).toBe('open');
   expect(evaluateExit('gate', { ...context, locationId: 'gate', heat: 50 }).reason).toMatch(/盘查/);
+  expect(evaluateExit('gate', { ...context, locationId: 'gate', heat: 40, knownStyle: true }).reason).toMatch(/盘查/);
 });
 
 test('商队主动掷骰失败会扣车资、增加风声和推进种子', () => {
@@ -26,6 +27,7 @@ test('商队主动掷骰失败会扣车资、增加风声和推进种子', () =>
   expect(after.run?.coins).toBe(0);
   expect(after.run?.heat).toBe(75);
   expect(after.run?.seed).not.toBe(1);
+  expect(after.run?.log?.at(-1)).toMatch(/掷出/);
 });
 
 test('商队掷骰成功结算，水道撤离丢最重普通战利品', () => {
