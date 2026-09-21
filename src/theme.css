@@ -1,0 +1,442 @@
+:root {
+  --wood: #3b2d22;
+  --wood-dark: #231b16;
+  --paper: #e2cda3;
+  --paper-light: #f1dfb8;
+  --ink: #382a1c;
+  --gold: #b58a4c;
+  --red: #8b3e2b;
+  color: #f2e3c3;
+  background: #17130f;
+}
+
+body {
+  background: repeating-linear-gradient(90deg, #17130f 0 20px, #1d1712 20px 22px);
+}
+
+button, input, select { border-radius: 2px; }
+button:focus-visible, summary:focus-visible, input:focus-visible, select:focus-visible {
+  outline: 2px solid #d6a35a;
+  outline-offset: 2px;
+}
+
+.page {
+  border-inline: 2px solid #624629;
+  background: #2c231b;
+  box-shadow: 0 0 0 2px #15100d, 0 0 45px #000a;
+}
+.eyebrow { color: #cbaa71; letter-spacing: .16em; }
+h1, h2 { color: #f5e1b2; text-shadow: 1px 2px #1b140e; }
+.intro { color: #d6c6a6; }
+.hint { color: #b9a789; }
+.text-button { color: #e9ca8d; }
+
+/* Painted world and compact status plaques. */
+.town-illustration {
+  background-image: url('./assets/town-pixel.png');
+  background-position: center 46%;
+  image-rendering: pixelated;
+  border-bottom: 4px solid #80603c;
+  box-shadow: inset 0 -5px #2a1e14;
+}
+.town-illustration::after { background: linear-gradient(transparent 52%, #211810b5); }
+.town-scene-title { color: #fff0cc; text-shadow: 2px 3px #271911, -1px -1px #271911; }
+.town-scene-status span {
+  border: 2px solid #8a6537;
+  background: #ead4a8;
+  color: #48301d;
+  box-shadow: inset 0 0 0 1px #f8eccd, 3px 3px 0 #2418109c;
+  font-weight: 700;
+}
+.explore-illustration {
+  background-image: url('./assets/stronghold-pixel.png');
+  background-position: center 23%;
+  image-rendering: pixelated;
+  border-bottom: 4px solid #80603c;
+}
+.explore-illustration::after { background: linear-gradient(#0e152000, #1c1a1b70); }
+
+/* Parchment panels keep the world visible while actions stay readable. */
+.town-page .page-content, .explore-content {
+  color: var(--ink);
+  background: linear-gradient(135deg, #eedeb7, #dcc498 68%, #d3b989);
+  border-top: 2px solid #f7e6bf;
+  box-shadow: inset 0 4px #aa8048;
+}
+.town-page .page-content h1, .town-page .page-content h2,
+.explore-content h1, .explore-content h2 {
+  color: #49311d;
+  text-shadow: none;
+}
+.town-page .eyebrow, .explore-content .eyebrow { color: #856139; }
+.town-page .intro, .explore-content .scene-description { color: #433426; }
+.town-page .hint, .explore-content .hint { color: #70583b; }
+.town-page .text-button, .town-page .save-drawer summary { color: #684522; }
+.town-page .save-drawer .hint { color: #70583b; }
+.town-list h2 { padding-bottom: 5px; border-bottom: 1px solid #a48355; }
+.town-art, .choice-button {
+  background: var(--paper-light);
+  color: #3c2b1b;
+  border: 2px solid #977248;
+  box-shadow: inset 0 0 0 1px #fff0c8, 2px 2px 0 #6d51337a;
+}
+.town-art small, .choice-button small { color: #7a6042; }
+.town-art:hover:not(:disabled), .choice-button:hover:not(:disabled) {
+  background: #fff0cd;
+  border-color: #66451e;
+}
+.town-featured-action, .exit-choice {
+  background: #813e2e;
+  color: #fff0cd;
+  border-color: #c89c5c;
+  box-shadow: inset 0 0 0 1px #ad6848, 2px 2px 0 #44261c8c;
+}
+.town-featured-action small, .exit-choice small { color: #f0c99e; }
+.town-featured-action:hover:not(:disabled), .exit-choice:hover:not(:disabled) { background: #984a35; }
+.quick-stats span {
+  background: #efddb5;
+  border: 1px solid #a68658;
+  color: #574029;
+  font-weight: 700;
+}
+.heat-line { color: #765538; }
+.heat-line strong { color: #a53e28; }
+.heat-track { background: #a18660; }
+.heat-track div { background: #ae422b; }
+.scene-notice { color: #8d3c2b; border-left-color: #aa4a30; }
+.explore-guide { background: #f7e7bf; color: #664522; border-left-color: #ae7c39; }
+.objective-line { color: #6c4d2d; border-color: #af8d5c; }
+.exit-heading { color: #684626; }
+
+/* The four tools stay in reach at the bottom of exploration. */
+.explore-menu {
+  background: #4a3324;
+  border-top: 3px solid #bd9257;
+  box-shadow: inset 0 2px #6d5034, 0 -7px 20px #20160f91;
+}
+.explore-menu .route-drawer { border-right-color: #8c6845; }
+.explore-menu summary {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  color: #f4dfb3;
+  font-size: 11px;
+  font-weight: 700;
+}
+.explore-menu summary::before {
+  content: '路';
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border: 1px solid #cfa569;
+  background: #6c4930;
+  color: #fff0ca;
+  font-family: STKaiti, KaiTi, serif;
+  font-size: 14px;
+}
+.explore-menu .route-drawer:nth-child(2) summary::before { content: '图'; }
+.explore-menu .route-drawer:nth-child(3) summary::before { content: '录'; }
+.explore-menu .route-drawer:nth-child(4) summary::before { content: '囊'; }
+.explore-menu .route-drawer[open] summary { background: #844a30; }
+.menu-popover {
+  background: #e6d2a9;
+  color: var(--ink);
+  border-top: 3px solid #ad7d40;
+  box-shadow: 0 -12px 25px #21160db0;
+}
+.menu-popover .hint, .menu-popover .action-log { color: #5c4730; }
+.menu-popover .abandon-button { color: #8b3e2b; border-color: #a47553; }
+
+.explore-story {
+  color: var(--ink);
+  background: linear-gradient(135deg, #f1dfb9, #e7cf9e 72%, #dfc492);
+  border-top: 2px solid #f7e6bf;
+  box-shadow: inset 0 4px #aa8048;
+}
+.explore-story h1 { color: #49311d; text-shadow: none; }
+.explore-story .eyebrow { color: #856139; }
+.explore-story .scene-description { color: #433426; }
+.explore-story-scroll { scrollbar-color: #a58050 transparent; }
+.explore-result { background: #f8e9c8; border-left: 4px solid #a85e3e; box-shadow: 1px 2px 0 #a77c4c70; color: #49311d; }
+.explore-result strong { color: #974f35; }
+.explore-result small { color: #845d3c; }
+.explore-error { border-left-color: #9a3e2d; background: #f8ddd0; }
+.explore-error strong, .explore-error p { color: #8e3125; }
+.explore-actions { background: #73502f; border-top: 4px solid #4e361e; }
+.explore-group-heading h2 { color: #f4dfb9; text-shadow: none; }
+.explore-group-heading span { color: #e0c49b; }
+.explore-action-scroll { scrollbar-color: #dab98b #5b3b24; }
+.explore-move-list .compact-move { background: #efdfbf; border-color: #b39164; box-shadow: 0 2px #49331f; }
+.pack-popover { max-height: min(calc(100dvh - 85px), 720px); padding: 13px 14px 16px; }
+.bag-heading, .bag-section-heading, .bag-selected-title, .bag-selected-footer { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.bag-heading { border-bottom: 2px solid #a17c4a; padding-bottom: 5px; }
+.bag-heading h2 { margin: 0; color: #49311d; text-shadow: none; font-size: 23px; }
+.bag-heading span, .bag-section-heading small { color: #856a46; font-size: 10px; }
+.bag-feedback { margin: 8px 0 0; padding: 6px 8px; border-left: 3px solid #a85e3e; background: #f8e9c8; color: #67462b; font-size: 11px; line-height: 1.45; }
+.bag-feedback-error { border-left-color: #9a3e2d; background: #f8ddd0; color: #8e3125; }
+.bag-context { margin: 7px 0 0; color: #715638; font-size: 11px; }
+.bag-capacity { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 5px; margin: 9px 0 12px; }
+.bag-capacity div { background: #f7e8c7; border: 1px solid #b99561; padding: 6px 3px; text-align: center; }
+.bag-capacity small { display: block; color: #8b6a44; font-size: 10px; }
+.bag-capacity strong { display: block; color: #66462a; font-size: 13px; white-space: nowrap; }
+.bag-section-heading { margin: 10px 0 6px; }
+.bag-section-heading strong { color: #634a2d; font-size: 12px; }
+.bag-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-template-rows: repeat(3, 62px); grid-auto-rows: 62px; gap: 4px; border: 5px solid #795838; background: #795838; }
+.bag-grid-item { display: flex; flex-direction: column; justify-content: center; min-width: 0; min-height: 0; padding: 4px 5px; border: 2px solid #bc955f; background: #f3deb5; color: #49311d; text-align: left; }
+.bag-grid-item.selected { border-color: #a65336; background: #ffe6b7; }
+.bag-grid-item strong { font-family: STKaiti, KaiTi, serif; font-size: 15px; line-height: 1.2; overflow: hidden; text-overflow: ellipsis; }
+.bag-grid-item small { color: #855f38; font-size: 9px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bag-empty-slot { background: #d6bb8f; border: 1px solid #b39464; box-shadow: inset 1px 1px #ae8e5c; }
+.bag-selected { margin-top: 10px; padding: 9px 10px; border: 2px solid #a86f40; background: #f7e7c4; box-shadow: 2px 3px #986c3d; }
+.bag-selected-title h3 { margin: 0; color: #4e341f; font-family: STKaiti, KaiTi, serif; font-size: 20px; }
+.bag-selected-title span { color: #9a4d35; font-size: 11px; }
+.bag-selected p { margin: 5px 0 9px; color: #6c5136; font-size: 11px; line-height: 1.5; }
+.bag-selected-footer { align-items: flex-end; }
+.bag-selected-footer small { color: #7c5e3d; font-size: 10px; line-height: 1.5; }
+.bag-selected-footer button, .bag-manage-row button { flex: none; min-height: 35px; padding: 5px 8px; border: 1px solid #8f4935; background: #a75b3e; color: #fff0d1; font-size: 11px; font-weight: 700; }
+.bag-subsection { margin-top: 13px; border-top: 1px solid #a17c4a; padding-top: 3px; }
+.bag-subsection .hint { margin: 5px 0; }
+.bag-manage-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; min-height: 42px; border-bottom: 1px solid #bb9e73; color: #59412b; font-size: 12px; }
+.bag-subsection .choice-button { width: 100%; min-height: 46px; margin-bottom: 6px; font-size: 14px; }
+.bag-panel > .abandon-button, .bag-panel > .confirm-box { margin-top: 20px; }
+
+/* Shared wood, paper and vermilion controls. */
+.primary-button, .tutorial-action {
+  background: #963e2b;
+  color: #fff1cf;
+  border: 2px solid #d2a35e;
+  box-shadow: inset 0 0 0 1px #b76442, 3px 3px 0 #241710a1;
+  font-weight: 700;
+}
+.primary-button:hover:not(:disabled), .tutorial-action:hover:not(:disabled) { background: #ac5035; }
+.bottom-action, .town-page .bottom-action {
+  background: #39281d;
+  border-top: 3px solid #ac8248;
+  box-shadow: inset 0 2px #5d4028;
+}
+.tutorial-card {
+  background: #493526;
+  border: 2px solid #bb8d50;
+  box-shadow: inset 0 0 0 1px #6d5033, 3px 3px 0 #301e1680;
+  color: #f4e2ba;
+}
+.tutorial-card h2 { color: #ffe3a0 !important; text-shadow: none; }
+.tutorial-card p { color: #e8d6af; }
+.tutorial-heading { color: #e9ba70; }
+.tutorial-heading button { color: #f0cfa0; }
+.tutorial-card .tutorial-next { color: #ffdb82; }
+.tutorial-target { outline-color: #cc5e33; }
+.status-card {
+  background: #4b3829;
+  border: 2px solid #b78c51;
+  box-shadow: inset 0 0 0 1px #69503b;
+}
+.status-card span { color: #dfc89e; }
+.status-card strong { color: #fff0ca; }
+
+/* Character, battle and journal screens use the same materials. */
+.combat-page {
+  background: linear-gradient(#211a1659, #211a16d8 67%), url('./assets/stronghold-pixel.png') center 22% / cover;
+}
+.combat-page .page-content { background: linear-gradient(#211b168c, #211b16d9 72%); }
+.combat-actions button {
+  background: #ead3aa;
+  color: #432d1c;
+  border: 2px solid #9f7948;
+  box-shadow: inset 0 0 0 1px #f9eac8, 2px 2px 0 #100e0c9c;
+}
+.combat-actions button:nth-child(2) { background: #cda670; border-color: #e5bf78; }
+.combat-actions small { color: #795638; }
+.art-select, .number-input, .loadout-row input[type='number'] {
+  background: #efdbb2;
+  color: #3e2c1c;
+  border: 2px solid #a47c49;
+}
+.loadout-row input[type='checkbox'] { accent-color: #a4492c; }
+.loadout-row { border-bottom: 1px solid #7e654a; }
+.field-label { color: #e2c896; }
+.region-picker button, .save-drawer button, .error-actions button, .slot-confirm button {
+  background: #e1c99e;
+  color: #3c2b1c;
+  border: 2px solid #9b7547;
+}
+.region-picker button[aria-pressed='true'] { background: #9a4730; color: #fff0cf; border-color: #d3a461; }
+.rumor-card, .slot-card, .confirm-box {
+  background: #e5d0a6;
+  color: #3b2b1e;
+  border: 2px solid #a9814b;
+  box-shadow: inset 0 0 0 1px #f8e8c3, 3px 3px 0 #1c130fa3;
+}
+.rumor-card h2, .slot-card strong { color: #51351f; text-shadow: none; }
+.rumor-card p, .slot-card small, .rumor-card .hint { color: #614931; }
+.rumor-card button { background: #92452f; color: #fff0cb; border: 2px solid #bb8b53; }
+.slot-number, .slot-action { color: #8e4c2b; }
+.slot-restart { color: #735235; }
+.slot-card:hover, .slot-card:focus-within { background: #f2dfb8; border-color: #6c4c28; }
+.save-drawer { border-top-color: #9f8056; }
+.save-drawer summary { color: #f0d7a4; }
+.confirm-box p { color: #4d3724; }
+.menu-art {
+  background: linear-gradient(180deg, #27191030 0%, #27191055 45%, #24170f 86%), url('./assets/town-pixel.png') center 35% / cover no-repeat;
+  image-rendering: pixelated;
+}
+.menu-content h1 { color: #fff0c6; text-shadow: 3px 4px #29180e; }
+.menu-tagline { color: #f1dfbc; text-shadow: 1px 2px #29180e; }
+.slot-page .menu-art { opacity: .45; }
+.prep-page, .result-page, .error-page, .rumors-page {
+  background: linear-gradient(#31251de8, #251c16f5), url('./assets/town-pixel.png') center 38% / cover;
+}
+.result-mark { color: #bc6242; border-color: #bc6242; }
+.field-error { color: #ffae8f; }
+
+/* Dialogue-style decisions: the action is read first, its cost on a second line. */
+.option-list {
+  gap: 6px;
+  padding: 5px;
+  background: #765331;
+  border: 2px solid #9c7140;
+  box-shadow: inset 0 0 0 1px #4f361f, 2px 3px 0 #59402b80;
+}
+.choice-button, .town-option {
+  display: grid;
+  grid-template-columns: 27px minmax(0, 1fr) 12px;
+  column-gap: 9px;
+  align-content: center;
+  text-align: left;
+}
+.explore-content .choice-button { min-height: 56px; padding: 6px 9px; }
+.town-option { min-height: 58px; padding: 7px 10px; }
+.choice-button .option-icon, .town-option .option-icon {
+  grid-column: 1;
+  grid-row: 1 / 3;
+  align-self: center;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  color: #fff0cc;
+  background: #795338;
+  border: 1px solid #5c3d26;
+  box-shadow: inset 0 0 0 1px #a1784d;
+  font-family: STKaiti, KaiTi, serif;
+  font-size: 15px;
+  line-height: 1;
+}
+.choice-button::after, .town-option::after {
+  content: '';
+  grid-column: 3;
+  grid-row: 1 / 3;
+  align-self: center;
+  width: 7px;
+  height: 7px;
+  border-top: 2px solid #825c34;
+  border-right: 2px solid #825c34;
+  transform: rotate(45deg);
+}
+.option-label {
+  grid-column: 2;
+  grid-row: 1;
+  min-width: 0;
+  font-family: STKaiti, KaiTi, 'Microsoft YaHei', serif;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+.choice-button .option-detail, .town-option .option-detail {
+  grid-column: 2;
+  grid-row: 2;
+  min-width: 0;
+  margin-top: 2px;
+  color: #72583b;
+  font-family: 'Microsoft YaHei', system-ui, sans-serif;
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 1.3;
+  text-align: left;
+}
+.option-move .option-icon, .town-option--travel .option-icon { background: #536b50; border-color: #435b42; }
+.option-combat .option-icon { background: #943f2c; border-color: #75301f; }
+.option-risk .option-icon { background: #a5662d; border-color: #7e4c21; }
+.option-hide .option-icon { background: #4b6b64; border-color: #38534e; }
+.option-study .option-icon, .town-option--study .option-icon { background: #74566d; border-color: #61445a; }
+.option-pack .option-icon, .town-option--trade .option-icon { background: #796344; border-color: #655039; }
+.town-option--rumor .option-icon { background: #f1d39d; color: #723623; border-color: #b7844d; }
+.option-risk .option-detail, .option-combat .option-detail { color: #943b27; font-weight: 700; }
+.town-featured-action .option-detail { color: #f3d5aa; }
+.town-featured-action::after { border-color: #f1d39d; }
+.choice-button.option-exit { background: #e3d1ab; color: #3d3022; border-color: #947651; }
+.choice-button.option-exit:hover:not(:disabled) { background: #f4e1b9; }
+.option-exit .option-icon { background: #587157; border-color: #496048; }
+.option-exit--roll4 .option-icon, .option-exit--roll5 .option-icon { background: #a4682f; border-color: #885223; }
+.option-exit--roll4 .option-detail, .option-exit--roll5 .option-detail { color: #903f29; font-weight: 700; }
+.choice-button:disabled, .town-option:disabled {
+  opacity: 1;
+  background: #c7b493;
+  color: #65533e;
+  border-color: #a28b68;
+  box-shadow: inset 0 0 0 1px #d7c5a3;
+}
+.choice-button:disabled .option-detail, .town-option:disabled .option-detail { color: #685b49; }
+.choice-button:disabled .option-icon, .town-option:disabled .option-icon { background: #91806a; border-color: #786954; color: #f5e7c9; }
+.choice-button:disabled::after, .town-option:disabled::after { display: none; }
+.choice-button:active:not(:disabled), .town-option:active:not(:disabled), .primary-button:active:not(:disabled) {
+  transform: translate(1px, 1px);
+  box-shadow: inset 0 0 0 1px #b28b5c;
+}
+.primary-button { position: relative; }
+.primary-button::before, .primary-button::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  background: #efc385;
+  transform: translateY(-50%) rotate(45deg);
+}
+.primary-button::before { left: 13px; }
+.primary-button::after { right: 13px; }
+
+.combat-actions .combat-option {
+  display: grid;
+  grid-template-columns: 25px minmax(0, 1fr);
+  column-gap: 7px;
+  align-content: center;
+  min-height: 60px;
+  padding: 6px 7px;
+}
+.combat-option .combat-option-icon {
+  grid-column: 1;
+  grid-row: 1 / 3;
+  align-self: center;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  background: #8f4b30;
+  color: #fff0cb;
+  border: 1px solid #693720;
+  font-size: 15px;
+}
+.combat-option--technique .combat-option-icon { background: #a07130; }
+.combat-option--defend .combat-option-icon { background: #526e55; }
+.combat-option--movement .combat-option-icon { background: #4b6873; }
+.combat-option--item .combat-option-icon { background: #796248; }
+.combat-option--retreat .combat-option-icon { background: #705548; }
+.combat-option-label { grid-column: 2; grid-row: 1; font-size: 16px; font-weight: 700; line-height: 1.2; }
+.combat-actions .combat-option small { grid-column: 2; grid-row: 2; margin: 2px 0 0; font-size: 10px; line-height: 1.25; }
+.combat-actions .combat-option:disabled {
+  opacity: 1;
+  background: #b4a38a;
+  color: #5e5142;
+  border-color: #94816a;
+  box-shadow: inset 0 0 0 1px #c5b398;
+}
+.combat-actions .combat-option:disabled .combat-option-icon { background: #8e806f; border-color: #786d5d; }
+.combat-actions .combat-option:disabled small { color: #66594a; }
+.combat-actions .combat-option:active:not(:disabled) { transform: translate(1px, 1px); box-shadow: inset 0 0 0 1px #b28b5c; }
+
+@media (max-height: 700px) {
+  .explore-menu summary { gap: 0; }
+  .explore-menu summary::before { width: 17px; height: 17px; font-size: 12px; }
+}

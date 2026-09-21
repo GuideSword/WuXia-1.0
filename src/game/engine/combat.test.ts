@@ -76,3 +76,14 @@ test('以显眼招式结束战斗仍计算招式风声', () => {
   expect(won.run?.heat).toBe(37);
   expect(won.run?.flags.some((flag) => flag.startsWith('style_seen:'))).toBe(false);
 });
+
+test('镇中不同作者的见解分别改善对应招式', () => {
+  for (const [artId, insightId] of [['wild_blade', 'insight_wild_trainer'], ['acupoint', 'insight_acupoint_prisoner'], ['taiji_sword', 'insight_taiji_visitor']] as const) {
+    const plain = battle();
+    plain.permanent.learnedArts.push(artId);
+    const learned = { ...plain, permanent: { ...plain.permanent, learnedInsights: [insightId] } };
+    const without = resolveTurn(plain, { type: 'technique', artId });
+    const withInsight = resolveTurn(learned, { type: 'technique', artId });
+    expect(withInsight.run?.battle?.enemyHp).toBe((without.run?.battle?.enemyHp ?? 0) - 3);
+  }
+});

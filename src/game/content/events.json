@@ -19,7 +19,7 @@
     "locationId": "second_chief_room",
     "text": "二当家倒下，刀架后露出一角染血纸页。暗门里似乎还有未查的密信。",
     "choices": [
-      { "id": "take_blood_page", "label": "取走血刀经残页", "conditions": [{ "type": "hasFlag", "value": "second_chief_defeated" }, { "type": "flagAbsent", "value": "blood_page_taken" }], "effects": [{ "type": "addLoot", "value": "blood_blade_page", "amount": 1 }, { "type": "setFlag", "value": "blood_page_taken" }, { "type": "addHeat", "value": 30 }], "riskHint": "主目标到手；负重 +1，风声 +30" },
+      { "id": "take_blood_page", "label": "取走血刀经残页", "conditions": [{ "type": "hasFlag", "value": "second_chief_defeated" }, { "type": "flagAbsent", "value": "blood_page_taken" }], "effects": [{ "type": "takeCopy", "value": "blood_page_copy" }, { "type": "setFlag", "value": "blood_page_taken" }, { "type": "setPermanentFlag", "value": "chief_secret_discovered" }, { "type": "addHeat", "value": 30 }], "riskHint": "主目标到手；负重 +1，风声 +30" },
       { "id": "leave_with_page", "label": "就此收手，返回西仓", "conditions": [{ "type": "hasFlag", "value": "blood_page_taken" }], "effects": [{ "type": "move", "value": "warehouse" }], "riskHint": "寻找可用出口" },
       { "id": "enter_chief_secret", "label": "继续追查寨主密室", "conditions": [{ "type": "hasFlag", "value": "blood_page_taken" }], "effects": [{ "type": "move", "value": "chief_secret" }], "riskHint": "可能触发高度警戒" }
     ]
@@ -31,7 +31,7 @@
     "text": "密信写着传人的踪迹。继续翻找势必惊动全寨。",
     "choices": [
       { "id": "find_heir_location", "label": "搜出血刀门传人位置", "conditions": [{ "type": "flagAbsent", "value": "chief_secret_searched" }], "effects": [{ "type": "setFlag", "value": "chief_secret_searched" }, { "type": "addRumor", "value": "heir_location" }, { "type": "confirmRumor", "value": "heir_location" }, { "type": "addHeat", "value": 45 }], "riskHint": "永久确认重要线索；风声 +45" },
-      { "id": "take_taiji_manual", "label": "借风灯翻出太极剑谱", "conditions": [{ "type": "hasItem", "value": "lantern" }, { "type": "flagAbsent", "value": "taiji_manual_taken" }], "effects": [{ "type": "addLoot", "value": "taiji_manual" }, { "type": "setFlag", "value": "taiji_manual_taken" }], "riskHint": "负重 +1" },
+      { "id": "read_sword_trace", "label": "辨认墙上的剑招痕迹", "conditions": [{ "type": "hasItem", "value": "lantern" }, { "type": "flagAbsent", "value": "sword_trace_seen" }], "effects": [{ "type": "setFlag", "value": "sword_trace_seen" }, { "type": "addHeat", "value": 3 }], "riskHint": "得到剑招线索；风声 +3" },
       { "id": "confront_chief", "label": "迎战归寨的寨主", "conditions": [{ "type": "heatAtLeast", "value": "75" }, { "type": "flagAbsent", "value": "chief_defeated" }], "effects": [{ "type": "startBattle", "value": "chief" }], "riskHint": "对手气血 55，亦可先撤" }
     ]
   },
@@ -99,15 +99,8 @@
         "id": "take_swallow_manual",
         "label": "翻取燕回身秘笈",
         "conditions": [{ "type": "flagAbsent", "value": "swallow_manual_taken" }],
-        "effects": [{ "type": "addLoot", "value": "swallow_manual", "amount": 1 }, { "type": "setFlag", "value": "swallow_manual_taken" }, { "type": "addHeat", "value": 8 }],
-        "riskHint": "负重 +1，风声 +8；撤离后可参悟"
-      },
-      {
-        "id": "take_breath_manual",
-        "label": "取走龟息功秘笈",
-        "conditions": [{ "type": "flagAbsent", "value": "breath_manual_taken" }],
-        "effects": [{ "type": "addLoot", "value": "breath_manual", "amount": 1 }, { "type": "setFlag", "value": "breath_manual_taken" }, { "type": "addHeat", "value": 8 }],
-        "riskHint": "负重 +1，风声 +8；撤离后可参悟"
+        "effects": [{ "type": "takeCopy", "value": "swallow_biaoshi_copy" }, { "type": "setFlag", "value": "swallow_manual_taken" }, { "type": "addHeat", "value": 8 }],
+        "riskHint": "独本；负重 +1，风声 +8；安全藏身或回镇后可研读"
       },
       {
         "id": "inspect_script_mark",
@@ -134,8 +127,8 @@
         "id": "silent_subdue_guard",
         "label": "点穴无声制服仓卫【点穴手】",
         "conditions": [{ "type": "hasArtTag", "value": "control" }, { "type": "flagAbsent", "value": "warehouse_guard_subdued" }],
-        "effects": [{ "type": "setFlag", "value": "warehouse_guard_subdued" }, { "type": "addLoot", "value": "wild_manual" }],
-        "riskHint": "无风声；取得狂风刀谱"
+        "effects": [{ "type": "setFlag", "value": "warehouse_guard_subdued" }, { "type": "addItem", "value": "medicine" }],
+        "riskHint": "无风声；取得守卫随身药"
       },
       {
         "id": "climb_warehouse_beam",
@@ -143,14 +136,21 @@
         "conditions": [{ "type": "hasArtTag", "value": "lightness" }, { "type": "flagAbsent", "value": "roof_traversed" }],
         "effects": [{ "type": "setFlag", "value": "roof_traversed" }, { "type": "addHeat", "value": -5 }],
         "riskHint": "避开巡逻，风声 -5"
+      },
+      {
+        "id": "borrow_wall_turn",
+        "label": "借墙回身避开巡查【镖师见解】",
+        "conditions": [{ "type": "hasInsight", "value": "insight_borrow_wall" }, { "type": "flagAbsent", "value": "borrow_wall_used" }],
+        "effects": [{ "type": "setFlag", "value": "borrow_wall_used" }, { "type": "addHeat", "value": -8 }],
+        "riskHint": "此行一次，风声 -8"
       }
     ]
   },
   {
-    "id": "prisoner_rescue", "locationId": "prisoner_cell", "npcId": "prisoner", "text": "囚犯轻声说出一条绕开山门的旧路。", "choices": [
-      { "id": "help_prisoner", "label": "解开囚犯绳结", "conditions": [{ "type": "flagAbsent", "value": "prisoner_helped" }], "effects": [{ "type": "setFlag", "value": "prisoner_helped" }, { "type": "addRelation", "value": "prisoner", "amount": 1 }, { "type": "addLoot", "value": "tunnel_map" }, { "type": "addHeat", "value": 12 }], "riskHint": "获得密道图与盟友，风声 +12" },
-      { "id": "take_acupoint_manual", "label": "拾取点穴手谱", "conditions": [{ "type": "flagAbsent", "value": "acupoint_manual_taken" }], "effects": [{ "type": "addLoot", "value": "acupoint_manual" }, { "type": "setFlag", "value": "acupoint_manual_taken" }], "riskHint": "负重 +1" },
-      { "id": "parry_cell_lock", "label": "以柔劲破锁【太极剑】", "conditions": [{ "type": "hasArtTag", "value": "counter" }, { "type": "flagAbsent", "value": "prisoner_helped" }], "effects": [{ "type": "setFlag", "value": "prisoner_helped" }, { "type": "addRelation", "value": "prisoner", "amount": 1 }, { "type": "addLoot", "value": "tunnel_map" }], "riskHint": "无声取得密道图与盟友" }
+    "id": "prisoner_rescue", "locationId": "prisoner_cell", "npcId": "prisoner", "text": "墙缝里夹着一张手绘的密道图。", "choices": [
+      { "id": "help_prisoner", "label": "解开囚犯绳结", "conditions": [{ "type": "flagAbsent", "value": "prisoner_freed" }], "effects": [{ "type": "setPermanentFlag", "value": "prisoner_freed" }, { "type": "addRelation", "value": "prisoner", "amount": 1 }, { "type": "addHeat", "value": 12 }], "riskHint": "结识盟友，风声 +12" },
+      { "id": "take_tunnel_map", "label": "收下囚犯绘的密道图", "conditions": [{ "type": "relationAtLeast", "value": "prisoner", "amount": 1 }], "effects": [{ "type": "takeCopy", "value": "tunnel_map_copy" }], "riskHint": "独本地图，可贴身保存" },
+      { "id": "parry_cell_lock", "label": "以柔劲破锁【太极剑】", "conditions": [{ "type": "hasArtTag", "value": "counter" }, { "type": "flagAbsent", "value": "prisoner_freed" }], "effects": [{ "type": "setPermanentFlag", "value": "prisoner_freed" }, { "type": "addRelation", "value": "prisoner", "amount": 1 }], "riskHint": "无声结识盟友" }
     ]
   },
   {
@@ -160,7 +160,18 @@
   },
   {
     "id": "waterway_cache", "locationId": "waterway", "text": "暗流下似乎压着走私者遗落的密袋。", "choices": [
+      { "id": "boatman_breath", "label": "按走水人笔记平息呼吸【走水人见解】", "conditions": [{ "type": "hasInsight", "value": "insight_breath_boatman" }, { "type": "flagAbsent", "value": "boatman_breath_used" }], "effects": [{ "type": "setFlag", "value": "boatman_breath_used" }, { "type": "addHeat", "value": -8 }], "riskHint": "此行一次，风声 -8" },
       { "id": "dive_for_cache", "label": "潜入水下寻找密袋【龟息功】", "conditions": [{ "type": "hasArtTag", "value": "breath" }, { "type": "flagAbsent", "value": "water_cache_found" }], "effects": [{ "type": "addLoot", "value": "silver_ledger" }, { "type": "setFlag", "value": "water_cache_found" }], "riskHint": "无风声；负重 +15，价值 2000 两" }
+    ]
+  },
+  {
+    "id": "qingyan_hall_original", "locationId": "qingyan_hall", "text": "旧演武堂梁下的木匣尚在，封泥上仍有青燕门的印记。", "choices": [
+      { "id": "take_swallow_original", "label": "取走燕回身原本", "conditions": [], "effects": [{ "type": "takeCopy", "value": "swallow_original_copy" }, { "type": "addHeat", "value": 6 }], "riskHint": "独本在此；风声 +6" }
+    ]
+  },
+  {
+    "id": "qingyan_traverse", "locationId": "qingyan_corridor", "text": "断梁挡住去路，踩着石座可以绕过去。", "choices": [
+      { "id": "cross_qingyan_beam", "label": "试探断梁的落脚点", "conditions": [{ "type": "flagAbsent", "value": "qingyan_beam_checked" }], "effects": [{ "type": "setFlag", "value": "qingyan_beam_checked" }, { "type": "addHeat", "value": 4 }], "riskHint": "记住安全落脚处；风声 +4" }
     ]
   },
   {

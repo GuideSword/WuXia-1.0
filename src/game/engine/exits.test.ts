@@ -46,3 +46,14 @@ test('商队掷骰成功结算，水道撤离丢最重普通战利品', () => {
   expect(escaped.permanent.coins).toBe(500);
   expect(escaped.permanent.stash.swallow_manual).toBe(1);
 });
+
+test('青燕门只允许自己的退路，原本先取得也能撤离', () => {
+  const content = loadBundledContent();
+  const base = createGame();
+  const heard = { ...base, permanent: { ...base.permanent, raids: 1, heardRumors: ['qingyan_ruins'] } };
+  const raid = startRun(heard, {}, 0, 7, content, 'qingyan');
+  expect(evaluateExit('gate', { ...context, regionId: 'qingyan', locationId: 'gate' }).status).toBe('closed');
+  expect(evaluateExit('qingyan_return', { ...context, regionId: 'qingyan', locationId: 'qingyan_gate' }).status).toBe('open');
+  expect(evaluateExit('qingyan_cliff', { ...context, regionId: 'qingyan', locationId: 'qingyan_hall', tags: ['lightness'] }).status).toBe('open');
+  expect(attemptExit(raid, 'qingyan_return', content).phase).toBe('result');
+});

@@ -5,9 +5,10 @@ import { runWeight } from './inventory';
 import { settleExtraction } from './lifecycle';
 import { artTags } from './martial';
 
-export type ExitId = 'gate' | 'cliff' | 'waterway' | 'caravan' | 'tunnel';
+export type ExitId = 'gate' | 'cliff' | 'waterway' | 'caravan' | 'tunnel' | 'qingyan_return' | 'qingyan_cliff';
 export type ExitStatus = 'open' | 'roll4' | 'roll5' | 'closed';
 export interface ExitContext {
+  regionId?: 'blackwind' | 'qingyan';
   locationId: string;
   heat: number;
   hasDisguise: boolean;
@@ -18,15 +19,26 @@ export interface ExitContext {
   ally: boolean;
   gateCleared?: boolean;
   knownStyle?: boolean;
+  insights?: string[];
 }
 export interface ExitEvaluation { status: ExitStatus; reason: string; costCoins: number; droppedItemIds: string[] }
 
-export const exitNames: Record<ExitId, string> = { gate: '山门', cliff: '悬崖', waterway: '水道', caravan: '商队', tunnel: '后山密道' };
-export const exitIds: ExitId[] = ['gate', 'cliff', 'waterway', 'caravan', 'tunnel'];
+export const exitNames: Record<ExitId, string> = { gate: '山门', cliff: '悬崖', waterway: '水道', caravan: '商队', tunnel: '后山密道', qingyan_return: '青燕门旧山门', qingyan_cliff: '青燕门断崖' };
+export const exitIds: ExitId[] = ['gate', 'cliff', 'waterway', 'caravan', 'tunnel', 'qingyan_return', 'qingyan_cliff'];
 
 export function evaluateExit(id: ExitId, c: ExitContext): ExitEvaluation {
   const closed = (reason: string): ExitEvaluation => ({ status: 'closed', reason, costCoins: 0, droppedItemIds: [] });
   const open = (reason: string, costCoins = 0): ExitEvaluation => ({ status: 'open', reason, costCoins, droppedItemIds: [] });
+  const region = c.regionId ?? 'blackwind';
+  if (id === 'qingyan_return' || id === 'qingyan_cliff') {
+    if (region !== 'qingyan') return closed('此路不在当前地图');
+    if (id === 'qingyan_return') return c.locationId === 'qingyan_gate' ? open('循旧山门返回青石镇') : closed('需返回青燕门旧山门');
+    if (c.locationId !== 'qingyan_hall') return closed('需到旧演武堂');
+    if (!c.tags.includes('lightness')) return closed('需习得轻功');
+    const limit = c.insights?.includes('insight_soft_landing') ? 25 : 20;
+    return c.load <= limit ? open('轻功越崖，返回青石镇') : closed(`负重须不超过 ${limit}`);
+  }
+  if (region !== 'blackwind') return closed('此路不在当前地图');
   if (id === 'gate') {
     if (c.locationId !== 'gate') return closed('需先到山门');
     if (c.heat >= 100) return closed('封寨追捕中，山门已关闭');
@@ -37,7 +49,8 @@ export function evaluateExit(id: ExitId, c: ExitContext): ExitEvaluation {
   if (id === 'cliff') {
     if (c.locationId !== 'back_hill') return closed('需先到后山');
     if (!c.tags.includes('lightness')) return closed('需习得轻功');
-    if (c.load > 20) return closed('负重须不超过 20');
+    const limit = c.insights?.includes('insight_soft_landing') ? 25 : 20;
+    if (c.load > limit) return closed(`负重须不超过 ${limit}`);
     return open('轻功越崖，保留全部物资');
   }
   if (id === 'waterway') {
@@ -63,13 +76,15 @@ export function exitContext(state: GameState, content: Content): ExitContext {
   const run = state.run;
   if (!run) throw new Error('没有进行中的探索');
   return {
+    regionId: run.regionId ?? 'blackwind',
     locationId: run.locationId, heat: run.heat,
     hasDisguise: (run.inventory.mask ?? 0) + (run.loot.mask ?? 0) > 0,
-    coins: run.coins, tags: artTags(state.permanent.learnedArts), load: runWeight(run, content),
-    hasTunnelMap: !!run.inventory.tunnel_map || !!run.loot.tunnel_map || state.permanent.confirmedRumors.includes('tunnel_entrance'),
+    coins: run.coins, tags: artTags(state.permanent.learnedArts), load: runWeight(run, content, state.permanent.copyPositions),
+    hasTunnelMap: !!run.inventory.tunnel_map || !!run.loot.tunnel_map || ['bag', 'pocket', 'home'].includes(state.permanent.copyPositions.tunnel_map_copy?.kind ?? '') || state.permanent.confirmedRumors.includes('tunnel_entrance'),
     ally: (state.permanent.relations.prisoner ?? 0) >= 1,
     gateCleared: canUseGate(run),
     knownStyle: run.flags.includes('known_style'),
+    insights: state.permanent.learnedInsights,
   };
 }
 

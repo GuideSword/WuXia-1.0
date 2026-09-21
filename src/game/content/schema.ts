@@ -9,12 +9,30 @@ export const locationSchema = z.object({
   kind: z.enum(['safe', 'danger']),
   description: z.string().min(1),
   requiresFlag: id.optional(),
+  regionId: z.enum(['blackwind', 'qingyan']).optional(),
+  light: z.boolean().optional(),
+  practiceSpace: z.boolean().optional(),
+  hideSpot: z.boolean().optional(),
+  patrolPeriod: z.number().int().positive().optional(),
+});
+
+export const copySchema = z.object({
+  id,
+  itemId: id,
+  sourceLocationId: id,
+  author: z.string().min(1),
+  title: z.string().min(1),
+  artId: id.optional(),
+  insightId: id.optional(),
+  requiresLight: z.boolean(),
+  requiresPracticeSpace: z.boolean(),
 });
 
 export const itemSchema = z.object({
   id,
   name: z.string().min(1),
   weight: z.number().int().min(0).max(30),
+  slots: z.number().int().min(1).max(3).optional(),
   kind: z.enum(['consumable', 'equipment', 'loot', 'quest', 'manual']),
   coinValue: z.number().int().nonnegative().optional(),
   buyPrice: z.number().int().nonnegative().optional(),
@@ -55,13 +73,13 @@ export const rumorSchema = z.object({
 });
 
 const conditionSchema = z.object({
-  type: z.enum(['flagAbsent', 'hasFlag', 'hasItem', 'hasArtTag', 'hasRumor', 'heatAtLeast', 'heatBelow', 'relationAtLeast', 'gateCheckRequired']),
+  type: z.enum(['flagAbsent', 'hasFlag', 'hasItem', 'hasArtTag', 'hasInsight', 'hasRumor', 'heatAtLeast', 'heatBelow', 'relationAtLeast', 'gateCheckRequired']),
   value: id,
   amount: z.number().int().optional(),
 });
 
 const effectSchema = z.object({
-  type: z.enum(['move', 'setFlag', 'addLoot', 'addHeat', 'addRumor', 'startBattle', 'addItem', 'takeItem', 'addCoins', 'heal', 'addRelation', 'confirmRumor']),
+  type: z.enum(['move', 'setFlag', 'addLoot', 'addHeat', 'addRumor', 'startBattle', 'addItem', 'takeItem', 'addCoins', 'heal', 'addRelation', 'confirmRumor', 'takeCopy', 'setPermanentFlag']),
   value: z.union([id, z.number()]),
   amount: z.number().int().optional(),
 });
@@ -88,4 +106,5 @@ export const contentSchema = z.object({
   arts: z.array(artSchema),
   items: z.array(itemSchema),
   rumors: z.array(rumorSchema),
+  copies: z.array(copySchema).default([]),
 });

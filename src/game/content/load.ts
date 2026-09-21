@@ -6,6 +6,7 @@ import npcs from './npcs.json';
 import arts from './martial-arts.json';
 import items from './items.json';
 import rumors from './rumors.json';
+import copies from './copies.json';
 
 function assertUnique(kind: string, entries: { id: Id }[]): void {
   const seen = new Set<Id>();
@@ -35,12 +36,17 @@ export function loadContent(raw: unknown): Content {
   const byItem = new Set(content.items.map((item) => item.id));
   const byNpc = new Set(content.npcs.map((npc) => npc.id));
   const byRumor = new Set(content.rumors.map((rumor) => rumor.id));
+  const byArt = new Set(content.arts.map((art) => art.id));
   const artTags = new Set(content.arts.flatMap((art) => art.tags));
+  const byInsight = new Set(content.copies.map((copy) => copy.insightId).filter((id): id is string => !!id));
+  const initialManualsByLocation = new Set<Id>();
+  const uniqueCopyItems = new Set<Id>();
 
   for (const location of content.locations) {
     for (const next of location.next) {
       if (!byLocation.has(next)) throw new Error(`locations.${location.id}.next 引用了不存在的地点 ${next}`);
       if (byLocation.get(next)?.kind !== location.kind) throw new Error(`locations.${location.id}.next 不可跨安全与危险区域`);
+      if (location.kind === 'danger' && byLocation.get(next)?.regionId !== location.regionId) throw new Error(`locations.${location.id}.next 不可跨探索地图`);
     }
   }
   for (const required of ['town_square', 'foothill', 'gate']) {
@@ -48,8 +54,24 @@ export function loadContent(raw: unknown): Content {
   }
   if (!reachable('foothill', byLocation).has('gate')) throw new Error('黑风寨山脚无法抵达山门');
   for (const location of content.locations) {
-    const root = location.kind === 'safe' ? 'town_square' : 'foothill';
+    if (location.kind === 'danger' && !location.regionId) throw new Error(`地点缺少探索地图：${location.id}`);
+    const root = location.kind === 'safe' ? 'town_square' : location.regionId === 'qingyan' ? 'qingyan_gate' : 'foothill';
     if (!reachable(root, byLocation).has(location.id)) throw new Error(`地点不可达：${location.id}`);
+  }
+  for (const copy of content.copies) {
+    if (!byItem.has(copy.itemId)) throw new Error(`copies.${copy.id}.itemId 不存在：${copy.itemId}`);
+    if (uniqueCopyItems.has(copy.itemId)) throw new Error(`独本物品重复：${copy.itemId}`);
+    uniqueCopyItems.add(copy.itemId);
+    if (!byLocation.has(copy.sourceLocationId)) throw new Error(`copies.${copy.id}.sourceLocationId 不存在：${copy.sourceLocationId}`);
+    if (copy.artId && !byArt.has(copy.artId)) throw new Error(`copies.${copy.id}.artId 不存在：${copy.artId}`);
+    if (!!copy.artId !== !!copy.insightId) throw new Error(`copies.${copy.id} 武学与见解必须同时存在`);
+    if (copy.artId) {
+      if (initialManualsByLocation.has(copy.sourceLocationId)) throw new Error(`同一地点有多份秘籍：${copy.sourceLocationId}`);
+      initialManualsByLocation.add(copy.sourceLocationId);
+    }
+    const source = byLocation.get(copy.sourceLocationId)!;
+    if (source.kind === 'safe' && (!content.npcs.some((npc) => npc.locationId === source.id && npc.itemsSold?.includes(copy.itemId)) || content.items.find((item) => item.id === copy.itemId)?.buyPrice === undefined)) throw new Error(`copies.${copy.id} 无法从镇中来源取得`);
+    if (source.kind === 'danger' && !content.events.some((event) => event.locationId === source.id && event.choices.some((choice) => choice.effects.some((effect) => effect.type === 'takeCopy' && effect.value === copy.id)))) throw new Error(`copies.${copy.id} 无法从探索地点取得`);
   }
   for (const npc of content.npcs) {
     if (!byLocation.has(npc.locationId)) throw new Error(`npcs.${npc.id}.locationId 不存在: ${npc.locationId}`);
@@ -72,6 +94,7 @@ export function loadContent(raw: unknown): Content {
         if (condition.type === 'hasItem' && !byItem.has(condition.value)) throw new Error(`${choice.id} 引用了不存在的物品 ${condition.value}`);
         if (condition.type === 'hasRumor' && !byRumor.has(condition.value)) throw new Error(`${choice.id} 引用了不存在的情报 ${condition.value}`);
         if (condition.type === 'hasArtTag' && !artTags.has(condition.value)) throw new Error(`${choice.id} 引用了不存在的武学标签 ${condition.value}`);
+        if (condition.type === 'hasInsight' && !byInsight.has(condition.value)) throw new Error(`${choice.id} 引用了不存在的见解 ${condition.value}`);
       }
       for (const effect of choice.effects) {
         const value = String(effect.value);
@@ -79,6 +102,11 @@ export function loadContent(raw: unknown): Content {
         if (['addRumor', 'confirmRumor'].includes(effect.type) && !byRumor.has(value)) throw new Error(`${choice.id} 引用了不存在的情报 ${value}`);
         if (effect.type === 'startBattle' && !byNpc.has(value)) throw new Error(`${choice.id} 引用了不存在的人物 ${value}`);
         if (effect.type === 'move' && !byLocation.has(value)) throw new Error(`${choice.id} 引用了不存在的地点 ${value}`);
+        if (effect.type === 'takeCopy') {
+          const copy = content.copies.find((entry) => entry.id === value);
+          if (!copy) throw new Error(`${choice.id} 引用了不存在的独本 ${value}`);
+          if (copy.sourceLocationId !== event.locationId) throw new Error(`${choice.id} 独本来源地点不一致`);
+        }
       }
     }
   }
@@ -93,6 +121,7 @@ export function findConsumers(content: Content, id: Id): string[] {
   ];
   const art = content.arts.find((entry) => entry.id === id);
   if (art) return art.id === 'basic_sword' ? ['starting-art', 'combat-technique'] : [
+    ...content.copies.filter((copy) => copy.artId === id).map((copy) => `study:${copy.id}`),
     ...content.events.flatMap((event) => event.choices.filter((choice) => choice.effects.some((effect) => effect.type === 'addLoot' && effect.value === art.manualItemId)).map((choice) => choice.id)),
     ...content.npcs.filter((entry) => entry.itemsSold?.includes(art.manualItemId ?? '')).map((entry) => `shop:${entry.id}`),
   ];
@@ -103,6 +132,8 @@ export function findConsumers(content: Content, id: Id): string[] {
   ];
   const item = content.items.find((entry) => entry.id === id);
   if (item) return [
+    ...(['blood_blade_page', 'tunnel_map'].includes(id) ? ['legacy-save-migration'] : []),
+    ...content.copies.filter((entry) => entry.itemId === id).map((entry) => `copy:${entry.sourceLocationId}`),
     ...content.npcs.filter((entry) => entry.itemsSold?.includes(id)).map((entry) => `shop:${entry.id}`),
     ...content.events.flatMap((event) => event.choices.filter((choice) => choice.effects.some((effect) => ['addItem', 'takeItem', 'addLoot'].includes(effect.type) && effect.value === id) || choice.conditions.some((condition) => condition.type === 'hasItem' && condition.value === id)).map((choice) => choice.id)),
     ...content.arts.filter((entry) => entry.manualItemId === id).map((entry) => `learn:${entry.id}`),
@@ -111,5 +142,5 @@ export function findConsumers(content: Content, id: Id): string[] {
 }
 
 export function loadBundledContent(): Content {
-  return loadContent({ locations, events, npcs, arts, items, rumors });
+  return loadContent({ locations, events, npcs, arts, items, rumors, copies });
 }

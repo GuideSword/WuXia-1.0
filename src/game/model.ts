@@ -1,6 +1,11 @@
 export type Id = string;
 export type Counts = Record<Id, number>;
 export type Phase = 'town' | 'rumors' | 'prep' | 'explore' | 'combat' | 'result' | 'error';
+export type RegionId = 'blackwind' | 'qingyan';
+
+export type CopyPosition =
+  | { kind: 'source' | 'bag' | 'pocket' | 'home' }
+  | { kind: 'lost'; locationId: Id };
 
 export interface PermanentState {
   coins: number;
@@ -11,6 +16,8 @@ export interface PermanentState {
   flags: Id[];
   relations: Record<Id, number>;
   raids: number;
+  copyPositions: Record<Id, CopyPosition>;
+  learnedInsights: Id[];
 }
 
 export interface BattleState {
@@ -22,6 +29,7 @@ export interface BattleState {
 }
 
 export interface RunState {
+  regionId?: RegionId;
   locationId: Id;
   hp: number;
   heat: number;
@@ -33,6 +41,11 @@ export interface RunState {
   seed: number;
   battle: BattleState | null;
   log?: string[];
+  hiddenAt?: Id | null;
+  patrolStep?: number;
+  wornItemIds?: Id[];
+  pocketItems?: Counts;
+  groundItems?: Record<Id, Counts>;
 }
 
 export interface ResultState {
@@ -43,6 +56,8 @@ export interface ResultState {
   lost: Counts;
   route: Id | null;
   message: string;
+  kept?: Counts;
+  lostAt?: Id | null;
 }
 
 export interface GameState {
@@ -62,12 +77,30 @@ export interface Location {
   kind: 'safe' | 'danger';
   description: string;
   requiresFlag?: Id;
+  regionId?: RegionId;
+  light?: boolean;
+  practiceSpace?: boolean;
+  hideSpot?: boolean;
+  patrolPeriod?: number;
+}
+
+export interface CopyDefinition {
+  id: Id;
+  itemId: Id;
+  sourceLocationId: Id;
+  author: string;
+  title: string;
+  artId?: Id;
+  insightId?: Id;
+  requiresLight: boolean;
+  requiresPracticeSpace: boolean;
 }
 
 export interface ItemDefinition {
   id: Id;
   name: string;
   weight: number;
+  slots?: number;
   kind: 'consumable' | 'equipment' | 'loot' | 'quest' | 'manual';
   coinValue?: number;
   buyPrice?: number;
@@ -112,6 +145,7 @@ export type ConditionType =
   | 'hasFlag'
   | 'hasItem'
   | 'hasArtTag'
+  | 'hasInsight'
   | 'hasRumor'
   | 'heatAtLeast'
   | 'heatBelow'
@@ -136,7 +170,9 @@ export type EffectType =
   | 'addCoins'
   | 'heal'
   | 'addRelation'
-  | 'confirmRumor';
+  | 'confirmRumor'
+  | 'takeCopy'
+  | 'setPermanentFlag';
 
 export interface Effect {
   type: EffectType;
@@ -168,4 +204,5 @@ export interface Content {
   arts: ArtDefinition[];
   items: ItemDefinition[];
   rumors: RumorDefinition[];
+  copies: CopyDefinition[];
 }

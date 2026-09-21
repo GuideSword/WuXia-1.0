@@ -1,0 +1,46 @@
+[
+  {
+    "id": "swallow_biaoshi_copy",
+    "itemId": "swallow_biaoshi_copy",
+    "sourceLocationId": "warehouse",
+    "author": "关外老镖师",
+    "title": "《燕回身》镖师手抄本",
+    "artId": "swallow_step",
+    "insightId": "insight_borrow_wall",
+    "requiresLight": true,
+    "requiresPracticeSpace": true
+  },
+  {
+    "id": "swallow_original_copy",
+    "itemId": "swallow_original_copy",
+    "sourceLocationId": "qingyan_hall",
+    "author": "青燕门",
+    "title": "《燕回身》原本",
+    "artId": "swallow_step",
+    "insightId": "insight_soft_landing",
+    "requiresLight": true,
+    "requiresPracticeSpace": true
+  },
+  {
+    "id": "blood_page_copy",
+    "itemId": "blood_page_copy",
+    "sourceLocationId": "second_chief_room",
+    "author": "血刀门",
+    "title": "《血刀经·残页》",
+    "requiresLight": true,
+    "requiresPracticeSpace": false
+  },
+  {
+    "id": "tunnel_map_copy",
+    "itemId": "tunnel_map_copy",
+    "sourceLocationId": "prisoner_cell",
+    "author": "暗牢囚犯",
+    "title": "后山密道图",
+    "requiresLight": true,
+    "requiresPracticeSpace": false
+  },
+  { "id": "wild_trainer_copy", "itemId": "wild_trainer_copy", "sourceLocationId": "training_yard", "author": "青石镇练功师父", "title": "《狂风刀》师父手抄本", "artId": "wild_blade", "insightId": "insight_wild_trainer", "requiresLight": true, "requiresPracticeSpace": true },
+  { "id": "breath_boatman_copy", "itemId": "breath_boatman_copy", "sourceLocationId": "black_market", "author": "走水人", "title": "《龟息功》走水人手抄本", "artId": "turtle_breath", "insightId": "insight_breath_boatman", "requiresLight": true, "requiresPracticeSpace": false },
+  { "id": "acupoint_prisoner_copy", "itemId": "acupoint_prisoner_copy", "sourceLocationId": "inn", "author": "获救侠士", "title": "《点穴手》侠士手抄本", "artId": "acupoint", "insightId": "insight_acupoint_prisoner", "requiresLight": true, "requiresPracticeSpace": true },
+  { "id": "taiji_visitor_copy", "itemId": "taiji_visitor_copy", "sourceLocationId": "teahouse", "author": "茶馆过客", "title": "《太极剑》过客手抄本", "artId": "taiji_sword", "insightId": "insight_taiji_visitor", "requiresLight": true, "requiresPracticeSpace": true }
+]

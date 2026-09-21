@@ -5,6 +5,7 @@ import { loadBundledContent } from './game/content/load';
 import { ErrorScreen } from './ui/ErrorScreen';
 import { downloadText } from './ui/download';
 import './styles.css';
+import './theme.css';
 
 let initialError: string | null = null;
 try { loadBundledContent(); } catch (error) { initialError = error instanceof Error ? error.message : '游戏内容无法载入'; }

@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>文字搜打撤 · 探索与行囊改版样式图</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; }
+    body { width: 1040px; height: 1040px; overflow: hidden; color: #35291c; background: radial-gradient(circle at 50% -30%, #f5e8cc, #d2bc96 75%); font-family: "Microsoft YaHei", "PingFang SC", sans-serif; }
+    .sheet { width: 1040px; height: 1040px; padding: 32px 70px 28px; position: relative; }
+    .sheet::before { content: ""; position: absolute; inset: 11px; border: 1px solid #a18458; pointer-events: none; }
+    .heading { height: 91px; text-align: center; }
+    .heading h1 { font-family: "STKaiti", "KaiTi", serif; font-size: 31px; font-weight: 700; letter-spacing: 5px; margin: 0 0 4px; }
+    .heading p { color: #7b6346; margin: 0; font-size: 14px; letter-spacing: 2px; }
+    .phones { display: flex; justify-content: space-between; align-items: flex-start; }
+    .column { width: 414px; }
+    .caption { height: 33px; display: flex; align-items: center; gap: 9px; font-size: 15px; font-weight: 700; color: #654621; letter-spacing: 1px; }
+    .caption .num { background: #59452e; color: #f5e5ba; font-family: Georgia, serif; font-size: 12px; padding: 4px 7px; }
+    .phone { height: 844px; width: 390px; border: 6px solid #513920; outline: 2px solid #a87942; border-radius: 9px; overflow: hidden; background: #e8d1a7; box-shadow: 8px 12px 20px #513a2270, inset 0 0 0 2px #bc9259; position: relative; }
+    .art { height: 112px; position: relative; background: linear-gradient(#0e14271a, #12131466), url('../../src/assets/stronghold-pixel.png') center 27% / cover; image-rendering: pixelated; border-bottom: 5px solid #936a38; }
+    .art::after { content: ""; position: absolute; inset: auto 0 0; height: 4px; background: #e7bd76; }
+    .story { height: 322px; padding: 12px 17px 10px; background: linear-gradient(120deg, #f3dfb5, #e8cfa0); box-shadow: inset 0 0 0 2px #d1ae73; position: relative; }
+    .eyebrow { margin: 0; font-size: 11px; letter-spacing: 3px; color: #927143; }
+    .title-line { display: flex; align-items: baseline; justify-content: space-between; margin-top: 1px; }
+    .title-line h2 { font-size: 28px; font-family: "STKaiti", "KaiTi", serif; font-weight: 700; margin: 0; }
+    .title-line small { color: #8e6737; font-size: 11px; }
+    .heat { display: flex; align-items: center; gap: 7px; margin: 5px 0 10px; font-size: 11px; color: #71573a; }
+    .heat .track { flex: 1; height: 4px; background: #ae9168; }
+    .heat .track b { display: block; width: 8%; height: 100%; background: #9b4e35; }
+    .heat strong { color: #9b4e35; }
+    .prose { margin: 0; font-family: "STKaiti", "KaiTi", serif; font-size: 17px; line-height: 1.52; color: #403326; }
+    .result { margin-top: 10px; border-left: 4px solid #a85e3e; background: #f6e8c9; box-shadow: 1px 2px 0 #a77c4c6b; padding: 8px 10px 7px; }
+    .result h3 { margin: 0 0 3px; font-size: 11px; color: #8f4d35; letter-spacing: 2px; }
+    .result p { margin: 0; font-family: "STKaiti", "KaiTi", serif; font-size: 16px; line-height: 1.4; }
+    .result .delta { display: flex; gap: 11px; margin-top: 5px; color: #76583a; font-size: 11px; }
+    .stats { display: flex; gap: 7px; position: absolute; left: 17px; bottom: 11px; }
+    .stats span { border: 1px solid #b5915d; background: #f6e4c0; font-size: 11px; font-weight: 700; padding: 4px 7px; }
+    .actions { height: 340px; padding: 0 8px 7px; background: #73502f; border-top: 4px solid #4e361e; overflow: hidden; position: relative; }
+    .actions-head { height: 32px; display: flex; justify-content: space-between; align-items: center; color: #f6e2bd; font-size: 13px; font-weight: 700; letter-spacing: 2px; padding: 0 6px; }
+    .actions-head small { color: #d3b78e; font-size: 10px; letter-spacing: 0; font-weight: 400; }
+    .action-scroll { height: 298px; overflow: hidden; padding: 1px 3px 15px 1px; }
+    .action { height: 61px; margin-bottom: 7px; background: #faeac7; border: 2px solid #be9660; box-shadow: 0 3px #49331f; display: grid; grid-template-columns: 34px 1fr 16px; align-items: center; gap: 10px; padding: 4px 10px; }
+    .action .icon { height: 30px; width: 30px; background: #647563; border: 1px solid #d6c28e; outline: 1px solid #44503f; color: #f9e9c8; display: grid; place-items: center; font-family: "STKaiti", "KaiTi", serif; font-size: 17px; }
+    .action.risk .icon { background: #a26836; outline-color: #6b3f24; }
+    .action.event .icon { background: #715a45; outline-color: #51402f; }
+    .action b { display: block; font-family: "STKaiti", "KaiTi", serif; font-size: 18px; font-weight: 500; line-height: 1.1; }
+    .action small { display: block; margin-top: 4px; font-size: 10px; color: #826a4e; }
+    .action.risk small { color: #9d5035; }
+    .arrow { color: #8b6b43; font-size: 24px; }
+    .actions .fade { position: absolute; height: 35px; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, #73502f); }
+    .actions .scroll-mark { position: absolute; right: 3px; top: 46px; height: 90px; width: 3px; background: #dab98b; border-radius: 3px; }
+    .nav { height: 58px; background: #4e3425; display: grid; grid-template-columns: repeat(4, 1fr); border-top: 3px solid #997248; color: #ebd6b2; }
+    .nav div { text-align: center; border-right: 1px solid #8c6849; padding-top: 6px; font-size: 11px; font-weight: 700; }
+    .nav div:last-child { border-right: 0; }
+    .nav span { display: block; font-family: "STKaiti", "KaiTi", serif; border: 1px solid #b48a5e; width: 24px; height: 22px; line-height: 20px; margin: 0 auto 2px; font-size: 15px; }
+    .nav .active { background: #735035; color: #fff0cc; }
+    .bag-stage { height: 662px; background: #e9d2a6; padding: 12px 13px 13px; box-shadow: inset 0 0 0 2px #c49b61; }
+    .bag-title { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #a17c4a; padding-bottom: 7px; }
+    .bag-title h2 { margin: 0; font-family: "STKaiti", "KaiTi", serif; font-size: 25px; }
+    .bag-title span { font-size: 11px; color: #80623e; }
+    .bag-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 10px; }
+    .bag-summary div { background: #f7e8c7; border: 1px solid #b99561; padding: 6px 5px; text-align: center; }
+    .bag-summary small { display: block; font-size: 10px; color: #8b6a44; }
+    .bag-summary strong { display: block; color: #66462a; font-size: 15px; }
+    .bag-label { display: flex; justify-content: space-between; margin: 13px 0 7px; font-size: 12px; color: #6b5132; font-weight: 700; }
+    .bag-label small { font-weight: 400; color: #90754f; }
+    .grid { display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(3, 67px); gap: 4px; background: #795838; border: 5px solid #795838; box-shadow: inset 0 0 0 1px #3c2a1d; }
+    .slot { background: #d6bb8f; border: 1px solid #b39464; box-shadow: inset 1px 1px #ae8e5c; }
+    .slot.occupied { background: #f5e1b7; border: 2px solid #c48a44; display: flex; flex-direction: column; justify-content: center; padding: 7px; }
+    .slot.large { grid-column: span 2; background: #f4dcaa; border-color: #a65336; }
+    .slot b { font-family: "STKaiti", "KaiTi", serif; font-size: 16px; }
+    .slot small { font-size: 10px; color: #8e6336; }
+    .selected { margin-top: 13px; padding: 10px 11px; background: #f7e7c4; border: 2px solid #a86f40; box-shadow: 2px 3px #986c3d; }
+    .selected .line { display: flex; align-items: baseline; justify-content: space-between; }
+    .selected h3 { margin: 0; font-family: "STKaiti", "KaiTi", serif; font-size: 21px; }
+    .selected .badge { color: #9a4d35; font-size: 11px; }
+    .selected p { color: #6c5136; margin: 5px 0 9px; font-size: 11px; }
+    .selected .foot { display: flex; justify-content: space-between; align-items: center; }
+    .selected .value { font-size: 11px; color: #7c5e3d; }
+    .selected button { border: 1px solid #8f4935; background: #a75b3e; color: #fff0d1; font-weight: 700; font-size: 12px; padding: 7px 12px; }
+    .pocket { margin-top: 13px; padding-top: 11px; border-top: 2px solid #a17c4a; }
+    .pocket .bag-label { margin: 0 0 8px; }
+    .pocket-row { display: flex; gap: 6px; }
+    .pocket-row span { display: block; flex: 1; background: #e2c99e; border: 1px dashed #ab8b5c; text-align: center; padding: 8px 0; color: #876c48; font-size: 11px; }
+    .worn { font-size: 11px; color: #6b5132; margin: 11px 0 0; }
+    .footer-note { margin-top: 20px; text-align: center; font-size: 12px; color: #816949; letter-spacing: 1px; }
+  </style>
+</head>
+<body>
+  <div class="sheet">
+    <header class="heading"><h1>探索 · 行囊界面改版</h1><p>竖屏样式草图　｜　场景反馈常驻　·　选项独立滚动　·　容量可管理</p></header>
+    <div class="phones">
+      <section class="column">
+        <div class="caption"><span class="num">01</span> 探索中：先读结果，再做选择</div>
+        <div class="phone">
+          <div class="art"></div>
+          <div class="story">
+            <p class="eyebrow">黑风寨 · 试探</p>
+            <div class="title-line"><h2>西仓</h2><small>第 6 次行动</small></div>
+            <div class="heat"><span>风声 · 平静</span><span class="track"><b></b></span><strong>8</strong></div>
+            <p class="prose">仓门半掩，木箱上落着薄灰。门外的脚步声越来越近。</p>
+            <div class="result"><h3>刚刚发生</h3><p>你揭开木箱，发现一只沉甸甸的官银包。巡逻尚未察觉。</p><div class="delta"><span>发现：官银包</span><span>风声无变化</span></div></div>
+            <div class="stats"><span>气血 100</span><span>负重 4 / 30</span><span>背包 0 / 12 格</span></div>
+          </div>
+          <div class="actions">
+            <div class="actions-head"><span>可选行动</span><small>选项区可单独上下滚动 ↓</small></div>
+            <div class="action-scroll">
+              <div class="action risk"><span class="icon">取</span><span><b>带走官银包</b><small>占 2 格 · 负重 +15 · 风声 +18</small></span><span class="arrow">›</span></div>
+              <div class="action"><span class="icon">行</span><span><b>前往山门</b><small>转移地点</small></span><span class="arrow">›</span></div>
+              <div class="action"><span class="icon">行</span><span><b>前往二当家偏房</b><small>转移地点</small></span><span class="arrow">›</span></div>
+              <div class="action"><span class="icon">行</span><span><b>前往暗水道</b><small>转移地点</small></span><span class="arrow">›</span></div>
+              <div class="action event"><span class="icon">事</span><span><b>伏上屋梁</b><small>避开巡逻，风声 -5</small></span><span class="arrow">›</span></div>
+            </div><div class="scroll-mark"></div><div class="fade"></div>
+          </div>
+          <div class="nav"><div><span>路</span>撤离</div><div><span>图</span>地图</div><div><span>录</span>日志</div><div><span>囊</span>行囊</div></div>
+        </div>
+      </section>
+      <section class="column">
+        <div class="caption"><span class="num">02</span> 行囊中：容量与取舍一眼可见</div>
+        <div class="phone">
+          <div class="art"></div>
+          <div class="bag-stage">
+            <div class="bag-title"><h2>行囊</h2><span>西仓 · 关闭 ×</span></div>
+            <div class="bag-summary"><div><small>背包</small><strong>3 / 12 格</strong></div><div><small>负重</small><strong>20 / 30</strong></div><div><small>贴身</small><strong>0 / 2</strong></div></div>
+            <div class="bag-label"><span>背包物品</span><small>点选物品查看操作</small></div>
+            <div class="grid">
+              <div class="slot occupied large"><b>官银包</b><small>2 格 · 负重 15</small></div>
+              <div class="slot occupied"><b>金疮药</b><small>1 格</small></div>
+              <div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div><div class="slot"></div>
+            </div>
+            <div class="selected"><div class="line"><h3>官银包</h3><span class="badge">战利品</span></div><p>沉甸甸的银包。带走它会影响部分撤离路线。</p><div class="foot"><span class="value">价值 2000 两 · 占 2 格 · 负重 15</span><button>丢下物品</button></div></div>
+            <div class="pocket"><div class="bag-label"><span>贴身位置</span><small>失手时可保留 · 0 / 2</small></div><div class="pocket-row"><span>空</span><span>空</span></div></div>
+            <p class="worn">穿戴：铁剑　·　不占背包格，仍计入负重</p>
+          </div>
+          <div class="nav"><div><span>路</span>撤离</div><div><span>图</span>地图</div><div><span>录</span>日志</div><div class="active"><span>囊</span>行囊</div></div>
+        </div>
+      </section>
+    </div>
+    <div class="footer-note">样式草图 · 格子数量、物品占格与丢弃规则仍待确定</div>
+  </div>
+</body>
+</html>

@@ -21,9 +21,10 @@ export function resolveTurn(state: GameState, action: CombatAction): GameState {
   if (action.type === 'technique' && !state.permanent.learnedArts.includes(action.artId ?? '')) throw new Error('尚未掌握这门武学');
   const enemyGuard = battle.intent === 'guard';
   const artDamage: Record<string, number> = { basic_sword: 12, wild_blade: 18, taiji_sword: 12, swallow_step: 10, turtle_breath: 9, acupoint: 6 };
-  const baseDamage = action.type === 'attack' ? 8 + (run.inventory.sword ? 2 : 0) : action.type === 'technique' ? (artDamage[action.artId ?? ''] ?? 12) + (run.inventory.sword ? 2 : 0) : 0;
+  const insightDamage = action.type === 'technique' && ((action.artId === 'wild_blade' && state.permanent.learnedInsights.includes('insight_wild_trainer')) || (action.artId === 'acupoint' && state.permanent.learnedInsights.includes('insight_acupoint_prisoner'))) ? 3 : 0;
+  const baseDamage = action.type === 'attack' ? 8 + (run.inventory.sword ? 2 : 0) : action.type === 'technique' ? (artDamage[action.artId ?? ''] ?? 12) + (run.inventory.sword ? 2 : 0) + insightDamage : 0;
   const enemyTags = battle.intent === 'heavy' ? ['hard'] : battle.intent === 'strike' ? ['first'] : ['locked'];
-  const techniqueBonus = action.type === 'technique' && action.artId === 'taiji_sword' ? counterBonus(['soft', 'counter'], enemyTags) : 0;
+  const techniqueBonus = action.type === 'technique' && action.artId === 'taiji_sword' ? counterBonus(['soft', 'counter'], enemyTags) + (state.permanent.learnedInsights.includes('insight_taiji_visitor') && battle.intent === 'heavy' ? 3 : 0) : 0;
   const damage = enemyGuard ? Math.floor((baseDamage + techniqueBonus) / 2) : baseDamage + techniqueBonus;
   const enemyHp = Math.max(0, battle.enemyHp - damage);
   const visibleArt = action.type === 'technique' && !['acupoint', 'turtle_breath'].includes(action.artId ?? '');
@@ -32,14 +33,16 @@ export function resolveTurn(state: GameState, action: CombatAction): GameState {
   const actionName = action.type === 'technique' ? `施展${artName}` : { attack: '普通攻击', defend: '防御', movement: '身法闪避', item: '使用金疮药', retreat: '撤退' }[action.type];
   const inventory = { ...run.inventory };
   if (action.type === 'item') inventory.medicine -= 1;
+  const pocketItems = { ...run.pocketItems };
+  if (action.type === 'item' && (pocketItems.medicine ?? 0) > inventory.medicine + (run.loot.medicine ?? 0)) pocketItems.medicine -= 1;
   const healedHp = Math.min(100, run.hp + (action.type === 'item' ? 20 : action.type === 'technique' && action.artId === 'turtle_breath' ? 4 : 0));
   if (enemyHp === 0) return {
     ...state, phase: 'explore',
-    run: { ...run, inventory, battle: null, hp: healedHp, heat: addHeat(run.heat, 25 + techniqueHeat), flags: [...new Set([...run.flags.filter((flag) => !flag.startsWith('style_seen:')), `${battle.npcId}_defeated`])], log: [...(run.log ?? []), `${actionName}，击败敌人；风声 +${25 + techniqueHeat}`].slice(-30) },
+    run: { ...run, inventory, pocketItems, battle: null, hp: healedHp, heat: addHeat(run.heat, 25 + techniqueHeat), flags: [...new Set([...run.flags.filter((flag) => !flag.startsWith('style_seen:')), `${battle.npcId}_defeated`])], log: [...(run.log ?? []), `${actionName}，击败敌人；风声 +${25 + techniqueHeat}`].slice(-30) },
     notice: `敌人倒下，打斗惊动寨中。风声 +${25 + techniqueHeat}。`,
   };
   const incoming = battle.intent === 'heavy' ? 16 : battle.intent === 'strike' ? 8 : 4;
-  const heavyLoad = runWeight(run, loadBundledContent()) > 20;
+  const heavyLoad = runWeight(run, loadBundledContent(), state.permanent.copyPositions) > 20;
   const received = action.type === 'defend' ? Math.floor(incoming / 2)
     : action.type === 'movement' ? (heavyLoad ? Math.floor(incoming / 2) : artTags(state.permanent.learnedArts).includes('lightness') ? 0 : Math.floor(incoming / 4))
     : action.type === 'technique' && action.artId === 'acupoint' ? 0
@@ -50,7 +53,7 @@ export function resolveTurn(state: GameState, action: CombatAction): GameState {
   const roll = rollD6(run.seed);
   const next: GameState = {
     ...state,
-    run: { ...run, hp, seed: roll.nextSeed, inventory, heat: addHeat(run.heat, techniqueHeat), flags: visibleArt ? [...new Set([...run.flags, `style_seen:${action.artId}`])] : run.flags, battle: { ...battle, enemyHp, round: battle.round + 1, intent: roll.value <= 2 ? 'strike' : roll.value <= 4 ? 'heavy' : 'guard', defending: action.type === 'defend' }, log: [...(run.log ?? []), `${actionName}，造成 ${damage} 伤害，受到 ${received} 伤害`].slice(-30) },
+    run: { ...run, hp, seed: roll.nextSeed, inventory, pocketItems, heat: addHeat(run.heat, techniqueHeat), flags: visibleArt ? [...new Set([...run.flags, `style_seen:${action.artId}`])] : run.flags, battle: { ...battle, enemyHp, round: battle.round + 1, intent: roll.value <= 2 ? 'strike' : roll.value <= 4 ? 'heavy' : 'guard', defending: action.type === 'defend' }, log: [...(run.log ?? []), `${actionName}，造成 ${damage} 伤害，受到 ${received} 伤害`].slice(-30) },
     notice: `你造成 ${damage} 点伤害，受 ${received} 点伤害。`,
   };
   return hp === 0 ? failRun(next) : next;

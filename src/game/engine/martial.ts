@@ -20,8 +20,5 @@ export function learnArt(state: GameState, artId: string): GameState {
   if (!art) throw new Error('未知武学');
   if (state.permanent.learnedArts.includes(artId)) throw new Error('已掌握这门武学');
   if (!art.manualItemId || !state.permanent.stash[art.manualItemId]) throw new Error('尚未带回秘籍');
-  const stash = { ...state.permanent.stash };
-  stash[art.manualItemId] -= 1;
-  if (stash[art.manualItemId] === 0) delete stash[art.manualItemId];
-  return { ...state, permanent: { ...state.permanent, stash, learnedArts: [...state.permanent.learnedArts, artId] }, notice: `参悟「${art.name}」成功。` };
+  return { ...state, permanent: { ...state.permanent, learnedArts: [...state.permanent.learnedArts, artId], learnedInsights: [...state.permanent.learnedInsights, `legacy:${artId}`] }, notice: `参悟「${art.name}」成功，秘籍仍留在家中。` };
 }

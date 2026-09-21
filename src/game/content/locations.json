@@ -5,12 +5,15 @@
   { "id": "clinic", "name": "药铺", "kind": "safe", "next": ["town_square"], "description": "郎中调制金疮药。" },
   { "id": "black_market", "name": "黑市", "kind": "safe", "next": ["town_square"], "description": "掮客收拢各路行具。" },
   { "id": "training_yard", "name": "练功处", "kind": "safe", "next": ["town_square"], "description": "师父看着你带回的秘籍，等你自己悟出门道。" },
-  { "id": "foothill", "name": "黑风寨山脚", "kind": "danger", "next": ["gate"], "description": "山风从松林里穿过，寨门的火把在夜色里忽明忽暗。" },
-  { "id": "gate", "name": "黑风寨山门", "kind": "danger", "next": ["foothill", "warehouse", "back_hill"], "description": "两名守卫倚着门柱，山道从这里折入寨中。" },
-  { "id": "warehouse", "name": "西仓", "kind": "danger", "next": ["gate", "second_chief_room", "waterway", "prisoner_cell"], "description": "仓门半掩，木箱上落着一层薄灰。外面有人巡行。" },
-  { "id": "prisoner_cell", "name": "暗牢", "kind": "danger", "next": ["warehouse"], "description": "铁栅后关着一名知晓后山密道的囚犯。" },
-  { "id": "second_chief_room", "name": "二当家偏房", "kind": "danger", "next": ["warehouse", "chief_secret"], "description": "偏房内酒气未散，刀架旁坐着寨中二当家。" },
-  { "id": "chief_secret", "name": "寨主密室", "kind": "danger", "next": ["second_chief_room"], "requiresFlag": "blood_page_taken", "description": "暗门后有未燃尽的书信。门外已经传来急促脚步。" },
-  { "id": "back_hill", "name": "后山", "kind": "danger", "next": ["gate"], "description": "陡崖与旧密道都藏在山后，夜里只闻风声。" },
-  { "id": "waterway", "name": "暗水道", "kind": "danger", "next": ["warehouse"], "description": "水流没过腰际，石壁向山外渐渐收窄。" }
+  { "id": "foothill", "name": "黑风寨山脚", "kind": "danger", "regionId": "blackwind", "next": ["gate"], "light": true, "description": "山风从松林里穿过，寨门的火把在夜色里忽明忽暗。" },
+  { "id": "gate", "name": "黑风寨山门", "kind": "danger", "regionId": "blackwind", "next": ["foothill", "warehouse", "back_hill"], "light": true, "description": "两名守卫倚着门柱，山道从这里折入寨中。" },
+  { "id": "warehouse", "name": "西仓", "kind": "danger", "regionId": "blackwind", "next": ["gate", "second_chief_room", "waterway", "prisoner_cell"], "hideSpot": true, "practiceSpace": true, "patrolPeriod": 3, "description": "仓门半掩，木箱上落着一层薄灰。外面有人巡行。" },
+  { "id": "prisoner_cell", "name": "暗牢", "kind": "danger", "regionId": "blackwind", "next": ["warehouse"], "description": "铁栅后关着一名知晓后山密道的囚犯。" },
+  { "id": "second_chief_room", "name": "二当家偏房", "kind": "danger", "regionId": "blackwind", "next": ["warehouse", "chief_secret"], "description": "偏房内酒气未散，刀架旁坐着寨中二当家。" },
+  { "id": "chief_secret", "name": "寨主密室", "kind": "danger", "regionId": "blackwind", "next": ["second_chief_room"], "requiresFlag": "chief_secret_discovered", "description": "暗门后有未燃尽的书信。门外已经传来急促脚步。" },
+  { "id": "back_hill", "name": "后山", "kind": "danger", "regionId": "blackwind", "next": ["gate"], "light": true, "description": "陡崖与旧密道都藏在山后，夜里只闻风声。" },
+  { "id": "waterway", "name": "暗水道", "kind": "danger", "regionId": "blackwind", "next": ["warehouse"], "description": "水流没过腰际，石壁向山外渐渐收窄。" },
+  { "id": "qingyan_gate", "name": "青燕门废门", "kind": "danger", "regionId": "qingyan", "next": ["qingyan_corridor"], "light": true, "description": "旧山门的燕形铜饰被风沙磨得发白。" },
+  { "id": "qingyan_corridor", "name": "青燕门回廊", "kind": "danger", "regionId": "qingyan", "next": ["qingyan_gate", "qingyan_hall"], "light": true, "hideSpot": true, "patrolPeriod": 4, "description": "断梁下仍能看出门人练步的痕迹。" },
+  { "id": "qingyan_hall", "name": "青燕门旧演武堂", "kind": "danger", "regionId": "qingyan", "next": ["qingyan_corridor"], "light": true, "practiceSpace": true, "hideSpot": true, "patrolPeriod": 4, "description": "木架蒙尘，门派留下的步法图还在墙上。" }
 ]
